@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kimchi - Coreano desde cero</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#CD2E3A">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#CD2E3A; --blue:#0047A0; --ink:#1A1A2E; --paper:#FFFBF5;
+  --card:#FFFFFF; --line:#EAE3D8; --muted:#8A8578; --good:#2E8B57;
+  --gold:#D4A520;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+body{margin:0; font-family:'DM Sans',sans-serif; background:var(--paper); color:var(--ink); overscroll-behavior:none;}
+.kr{font-family:'Noto Sans KR',sans-serif;}
+#app{max-width:480px; margin:0 auto; min-height:100vh; padding-bottom:24px;}
+
+header.top{position:sticky; top:0; z-index:10; background:var(--paper); padding:16px 18px 10px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--line);}
+header.top .back{font-size:22px; cursor:pointer; color:var(--red); width:28px;}
+header.top h1{font-size:19px; margin:0; flex:1;}
+header.top .sub{font-size:12px; color:var(--muted); margin-top:2px;}
+
+.hero{padding:22px 18px 8px;}
+.hero .brand{display:flex; align-items:center; gap:12px;}
+.hero .brand img{width:46px; height:46px; border-radius:12px;}
+.hero h1{font-size:24px; margin:0;}
+.hero p{color:var(--muted); font-size:14px; margin:4px 0 0;}
+
+.install-banner{margin:14px 18px 0; background:var(--ink); color:#fff; border-radius:14px; padding:12px 14px; display:none; align-items:center; gap:10px; font-size:13px;}
+.install-banner.show{display:flex;}
+.install-banner button{background:var(--red); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-size:13px; font-weight:700;}
+.install-banner .close{margin-left:auto; opacity:.6; font-size:18px; padding:0 4px;}
+
+.modules{padding:14px 18px;}
+.mcard{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:12px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:transform .1s;}
+.mcard:active{transform:scale(.98);}
+.mcard.locked{opacity:.5; cursor:default;}
+.mcard .icon{width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:#fff; flex-shrink:0;}
+.mcard .icon.c1{background:var(--red);}
+.mcard .icon.c2{background:var(--blue);}
+.mcard .icon.c3{background:var(--gold);}
+.mcard .info{flex:1; min-width:0;}
+.mcard .info h3{margin:0 0 2px; font-size:15px;}
+.mcard .info p{margin:0; font-size:12.5px; color:var(--muted);}
+.mcard .prog{font-size:11px; color:var(--muted); margin-top:6px;}
+.mcard .bar{height:5px; background:var(--line); border-radius:3px; margin-top:4px; overflow:hidden;}
+.mcard .bar div{height:100%; background:var(--good); border-radius:3px;}
+
+.tabs{display:flex; padding:10px 14px 0; gap:6px; border-bottom:1px solid var(--line); position:sticky; top:57px; background:var(--paper); z-index:9;}
+.tab{flex:1; text-align:center; padding:10px 4px; font-size:12.5px; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; cursor:pointer;}
+.tab.active{color:var(--red); border-bottom-color:var(--red);}
+
+.grid{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; padding:16px 18px;}
+.chip{aspect-ratio:1; background:var(--card); border:1px solid var(--line); border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; position:relative;}
+.chip:active{transform:scale(.95);}
+.chip .g{font-size:26px; font-weight:700;}
+.chip .r{font-size:10px; color:var(--muted); margin-top:2px;}
+.chip .dot{position:absolute; top:6px; right:6px; width:7px; height:7px; border-radius:50%; background:var(--line);}
+.chip .dot.done{background:var(--good);}
+
+.section-label{padding:14px 18px 0; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
+
+/* Flashcard / study screen */
+.study-wrap{padding:20px 18px;}
+.flash{background:var(--card); border:1px solid var(--line); border-radius:22px; padding:30px 20px; text-align:center; position:relative;}
+.flash .glyph{font-size:88px; font-weight:700; margin-bottom:6px;}
+.flash .rom{font-size:20px; color:var(--red); font-weight:700; margin-bottom:2px;}
+.flash .sound{font-size:13px; color:var(--muted); margin-bottom:16px;}
+.flash .audio-btn{width:52px; height:52px; border-radius:50%; background:var(--blue); color:#fff; border:none; font-size:22px; margin-bottom:16px;}
+.flash .mnem{background:var(--paper); border-radius:14px; padding:14px; font-size:13.5px; line-height:1.5; text-align:left; color:var(--ink);}
+.flash .mnem b{color:var(--red);}
+.nav-row{display:flex; gap:10px; margin-top:16px;}
+.nav-row button{flex:1; padding:13px; border-radius:12px; border:none; font-size:14px; font-weight:700; cursor:pointer;}
+.btn-secondary{background:var(--card); border:1px solid var(--line) !important; color:var(--ink);}
+.btn-primary{background:var(--red); color:#fff;}
+.btn-primary:disabled{opacity:.4;}
+.progress-dots{text-align:center; font-size:12px; color:var(--muted); margin-top:10px;}
+
+/* Writing practice */
+.write-wrap{padding:14px 18px;}
+.letter-picker{display:flex; gap:8px; overflow-x:auto; padding:4px 0 14px;}
+.letter-picker::-webkit-scrollbar{display:none;}
+.lp-item{flex-shrink:0; width:42px; height:42px; border-radius:10px; background:var(--card); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; cursor:pointer;}
+.lp-item.active{background:var(--red); color:#fff; border-color:var(--red);}
+.write-info{text-align:center; margin-bottom:10px;}
+.write-info .g{font-size:20px; font-weight:700;}
+.write-info .r{font-size:12px; color:var(--muted);}
+.canvas-box{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:10px; text-align:center;}
+canvas{width:100%; aspect-ratio:1; background:var(--paper); border-radius:12px; touch-action:none; border:1px dashed var(--line);}
+.write-controls{display:flex; gap:10px; margin-top:12px;}
+.write-controls button{flex:1; padding:12px; border-radius:12px; border:1px solid var(--line); background:var(--card); font-weight:700; font-size:13.5px;}
+.rep-counter{text-align:center; font-size:12px; color:var(--muted); margin-top:10px;}
+
+/* Quiz */
+.quiz-wrap{padding:18px;}
+.quiz-progress{display:flex; gap:4px; margin-bottom:18px;}
+.quiz-progress div{flex:1; height:5px; border-radius:3px; background:var(--line);}
+.quiz-progress div.done{background:var(--good);}
+.quiz-glyph{text-align:center; font-size:72px; font-weight:700; margin:24px 0;}
+.quiz-options{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.qopt{padding:16px 8px; border-radius:14px; border:1px solid var(--line); background:var(--card); font-size:16px; font-weight:700; text-align:center; cursor:pointer;}
+.qopt.correct{background:var(--good); color:#fff; border-color:var(--good);}
+.qopt.wrong{background:var(--red); color:#fff; border-color:var(--red);}
+.quiz-result{text-align:center; padding:40px 18px;}
+.quiz-result .score{font-size:52px; font-weight:700; color:var(--red);}
+
+.empty-hint{text-align:center; color:var(--muted); font-size:13px; padding:40px 20px;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ===================== DATA ===================== */
+const CONSONANTS = [
+  {g:'ㄱ', rom:'g/k', name:'giyeok', sound:'Como la "g" de "gato" al inicio, o "k" suave dentro de la palabra.',
+   mnem:'Su forma es una <b>escuadra de carpintero</b>: una línea vertical que dobla en ángulo recto hacia la derecha. Imagina que estás trazando la esquina de una mesa.'},
+  {g:'ㄴ', rom:'n', name:'nieun', sound:'Como la "n" de "nada".',
+   mnem:'Parece una <b>L acostada</b> mirando hacia la izquierda — como la lengua tocando la parte de atrás de los dientes de arriba al decir "n".'},
+  {g:'ㄷ', rom:'d/t', name:'digeut', sound:'Como la "d" de "dedo" al inicio, o "t" suave dentro de la palabra.',
+   mnem:'Es una <b>mesa vista de lado</b>: una línea horizontal arriba, otra abajo, unidas por la izquierda — como una "C" cuadrada abierta a la derecha.'},
+  {g:'ㄹ', rom:'r/l', name:'rieul', sound:'Un sonido intermedio entre "r" suave y "l" — la lengua toca el paladar una sola vez.',
+   mnem:'Es la letra más compleja: parece un <b>camino en zigzag</b> con varios giros. Piensa en un río serpenteante — de ahí que suene entre "r" y "l".'},
+  {g:'ㅁ', rom:'m', name:'mieum', sound:'Como la "m" de "mamá".',
+   mnem:'Un <b>cuadrado perfecto</b>. El rey Sejong diseñó esta letra para representar la forma de la <b>boca cerrada</b> al pronunciar "m".'},
+  {g:'ㅂ', rom:'b/p', name:'bieup', sound:'Como la "b" de "beso" al inicio, o "p" suave dentro de la palabra.',
+   mnem:'Parece una <b>escalera o ventana con barrotes</b> — representa los <b>labios presionados</b> juntos, como al decir "b" o "p".'},
+  {g:'ㅅ', rom:'s', name:'siot', sound:'Como la "s" de "sol".',
+   mnem:'Es un <b>triángulo o montaña</b> — el rey Sejong la diseñó imitando la forma de un <b>diente</b>, porque la "s" se pronuncia con los dientes.'},
+  {g:'ㅇ', rom:'-/ng', name:'ieung', sound:'Silenciosa al inicio de sílaba (solo sostiene la vocal); suena "ng" al final de sílaba.',
+   mnem:'Un <b>círculo perfecto</b>, como la <b>garganta abierta</b> — al inicio no bloquea nada (silenciosa), al final cierra el sonido en la nariz ("ng").'},
+  {g:'ㅈ', rom:'j', name:'jieut', sound:'Como la "y" fuerte de "yo" en Argentina, o la "j" inglesa de "job".',
+   mnem:'Es <b>ㅅ (siot) con una línea extra arriba</b> — como el triángulo de "s" pero con un techo, dándole un sonido más marcado.'},
+  {g:'ㅊ', rom:'ch', name:'chieut', sound:'Como la "ch" de "chico", pero aspirada (con más aire).',
+   mnem:'Es <b>ㅈ con un trazo extra encima</b>, como un sombrerito — cada trazo adicional en hangul suele indicar más aire al pronunciar.'},
+  {g:'ㅋ', rom:'k', name:'kieuk', sound:'Como la "k" de "kilo", con fuerza y aire (aspirada).',
+   mnem:'Es <b>ㄱ con una línea extra en medio</b> — la escuadra de carpintero, pero con un travesaño que le da más fuerza al sonido.'},
+  {g:'ㅌ', rom:'t', name:'tieut', sound:'Como la "t" de "taco", con fuerza y aire (aspirada).',
+   mnem:'Es <b>ㄷ con una línea extra arriba</b> — la mesa de digeut, pero con una tapa que la hace sonar más fuerte.'},
+  {g:'ㅍ', rom:'p', name:'pieup', sound:'Como la "p" de "papá", con fuerza y aire (aspirada).',
+   mnem:'Parece una <b>mesa con cuatro patas</b> vista de frente — versión "reforzada" de ㅂ, con más aire al pronunciarla.'},
+  {g:'ㅎ', rom:'h', name:'hieut', sound:'Como la "j" suave del español ("jamón"), o la "h" inglesa de "hello".',
+   mnem:'Un <b>círculo con un sombrero y una línea encima</b> — imagina una persona con sombrero soplando aire, como al decir "h".'},
+];
+
+const VOWELS = [
+  {g:'ㅏ', rom:'a', name:'a', sound:'Como la "a" de "casa".',
+   mnem:'Línea vertical con un <b>trazo corto hacia la derecha</b> — el trazo apunta hacia la luz (vocal "clara"), como una rama creciendo hacia el sol.'},
+  {g:'ㅑ', rom:'ya', name:'ya', sound:'Como "ya" en "yate".',
+   mnem:'Igual que ㅏ pero con <b>dos ramitas</b> en vez de una — la "y" se añade duplicando el trazo.'},
+  {g:'ㅓ', rom:'eo', name:'eo', sound:'Como una "o" abierta, entre "o" y "a" — similar al sonido en inglés "law".',
+   mnem:'Línea vertical con un <b>trazo corto hacia la izquierda</b> — apunta hacia adentro (vocal "oscura"), lo opuesto a ㅏ.'},
+  {g:'ㅕ', rom:'yeo', name:'yeo', sound:'Como "yeo", combinando la "y" con el sonido de ㅓ.',
+   mnem:'Igual que ㅓ pero con <b>dos ramitas</b> hacia la izquierda — de nuevo, doble trazo añade la "y".'},
+  {g:'ㅗ', rom:'o', name:'o', sound:'Como la "o" de "sol".',
+   mnem:'Línea horizontal con un <b>trazo corto hacia arriba</b> — como el sol saliendo sobre el horizonte (vocal clara, apunta hacia arriba).'},
+  {g:'ㅛ', rom:'yo', name:'yo', sound:'Como "yo" en "yoga".',
+   mnem:'Igual que ㅗ pero con <b>dos rayos</b> hacia arriba — doble trazo, doble "y".'},
+  {g:'ㅜ', rom:'u', name:'u', sound:'Como la "u" de "luna".',
+   mnem:'Línea horizontal con un <b>trazo corto hacia abajo</b> — como una raíz bajo tierra (vocal oscura, apunta hacia abajo).'},
+  {g:'ㅠ', rom:'yu', name:'yu', sound:'Como "yu" en "yugo".',
+   mnem:'Igual que ㅜ pero con <b>dos raíces</b> hacia abajo — doble trazo añade la "y".'},
+  {g:'ㅡ', rom:'eu', name:'eu', sound:'Un sonido que no existe en español — como una "u" sin redondear los labios, entre "u" e "i".',
+   mnem:'Solo una <b>línea horizontal</b>, plana como el <b>horizonte</b> — representa la tierra en el sistema original de Sejong.'},
+  {g:'ㅣ', rom:'i', name:'i', sound:'Como la "i" de "isla".',
+   mnem:'Solo una <b>línea vertical</b>, recta como una <b>persona de pie</b> — representa al ser humano en el sistema original de Sejong.'},
+];
+
+const ALL = [...CONSONANTS.map(c=>({...c,type:'c'})), ...VOWELS.map(v=>({...v,type:'v'}))];
+
+const COMPOUND_VOWELS = [
+  {g:'ㅐ', rom:'ae', name:'ae', sound:'Como la "e" de "perro", entre e y a.',
+   mnem:'Combinación de <b>ㅏ + ㅣ</b>: dos líneas verticales con un trazo corto entre ellas. Fusiona los sonidos "a" e "i".'},
+  {g:'ㅒ', rom:'yae', name:'yae', sound:'Como "ㅐ" pero con "y" al inicio.',
+   mnem:'Combinación de <b>ㅑ + ㅣ</b>: la versión con doble trazo de ㅐ. Es poco frecuente en palabras coreanas.'},
+  {g:'ㅔ', rom:'e', name:'e', sound:'Como la "e" de "mesa".',
+   mnem:'Combinación de <b>ㅓ + ㅣ</b>. Hoy en día suena casi igual que ㅐ, aunque se escriben distinto.'},
+  {g:'ㅖ', rom:'ye', name:'ye', sound:'Como "ㅔ" pero con "y" al inicio.',
+   mnem:'Combinación de <b>ㅕ + ㅣ</b>: versión con doble trazo de ㅔ.'},
+  {g:'ㅘ', rom:'wa', name:'wa', sound:'Como "wa" en "guante".',
+   mnem:'Combinación de <b>ㅗ + ㅏ</b>: une el trazo hacia arriba de ㅗ con el trazo hacia la derecha de ㅏ.'},
+  {g:'ㅙ', rom:'wae', name:'wae', sound:'Como "we" en "bien", con w inicial.',
+   mnem:'Combinación de <b>ㅗ + ㅐ</b>: ㅗ seguida de la combinación ae.'},
+  {g:'ㅚ', rom:'oe', name:'oe', sound:'En el habla moderna suena como "we".',
+   mnem:'Combinación de <b>ㅗ + ㅣ</b>: el trazo hacia arriba de ㅗ junto a una línea vertical.'},
+  {g:'ㅝ', rom:'wo', name:'wo', sound:'Como "wo" en "won" (la moneda coreana).',
+   mnem:'Combinación de <b>ㅜ + ㅓ</b>: el trazo hacia abajo de ㅜ junto al trazo hacia la izquierda de ㅓ.'},
+  {g:'ㅞ', rom:'we', name:'we', sound:'Como "we" en "web".',
+   mnem:'Combinación de <b>ㅜ + ㅔ</b>: ㅜ seguida de la combinación e.'},
+  {g:'ㅟ', rom:'wi', name:'wi', sound:'Como "wi" en "kiwi".',
+   mnem:'Combinación de <b>ㅜ + ㅣ</b>: el trazo hacia abajo de ㅜ junto a una línea vertical.'},
+  {g:'ㅢ', rom:'ui', name:'ui', sound:'Sonido único: entre "eu" e "i" dichos rápido y seguidos. Su pronunciación cambia según la posición en la palabra.',
+   mnem:'Combinación de <b>ㅡ + ㅣ</b>: la línea horizontal de ㅡ junto a la vertical de ㅣ — literalmente "tierra + persona" unidas.'},
+];
+
+const DOUBLE_CONSONANTS = [
+  {g:'ㄲ', rom:'kk', name:'ssang-giyeok', sound:'Como ㄱ pero "tensa": se pronuncia apretando la garganta, sin soltar aire.',
+   mnem:'Es <b>ㄱ escrita dos veces</b> seguidas. Cada consonante doble en hangul indica un sonido "tenso": más fuerza, cero aire, como si apretaras el sonido.'},
+  {g:'ㄸ', rom:'tt', name:'ssang-digeut', sound:'Como ㄷ pero tensa, sin aire.',
+   mnem:'Es <b>ㄷ escrita dos veces</b> — mismo patrón: doble trazo, sonido tenso y seco.'},
+  {g:'ㅃ', rom:'pp', name:'ssang-bieup', sound:'Como ㅂ pero tensa, sin aire.',
+   mnem:'Es <b>ㅂ escrita dos veces</b> — labios que se presionan con más fuerza, sin soltar aire.'},
+  {g:'ㅆ', rom:'ss', name:'ssang-siot', sound:'Como ㅅ pero tensa y más marcada.',
+   mnem:'Es <b>ㅅ escrita dos veces</b> — es la consonante doble más común, aparece mucho en verbos conjugados en pasado.'},
+  {g:'ㅉ', rom:'jj', name:'ssang-jieut', sound:'Como ㅈ pero tensa, sin aire.',
+   mnem:'Es <b>ㅈ escrita dos veces</b> — mismo patrón tenso que las demás dobles.'},
+];
+
+const BATCHIM_GROUPS = [
+  {key:'g', rom:'[k]', letters:'ㄱ, ㅋ, ㄲ', word:'학', wordRom:'hak', meaning:'colegio (abreviado)',
+   note:'Cuando la sílaba termina en ㄱ, ㅋ o ㄲ, el sonido final siempre se simplifica a una "k" cerrada, sin soltar aire — como cortar el sonido de golpe.'},
+  {key:'n', rom:'[n]', letters:'ㄴ', word:'문', wordRom:'mun', meaning:'puerta',
+   note:'ㄴ como batchim suena igual que al inicio de sílaba: una "n" clara, con la lengua tocando el paladar.'},
+  {key:'d', rom:'[t]', letters:'ㄷ, ㅅ, ㅈ, ㅊ, ㅌ, ㅎ, ㅆ', word:'옷', wordRom:'ot', meaning:'ropa',
+   note:'Este es el grupo más grande: siete consonantes distintas que, al final de sílaba, suenan todas igual — una "t" cerrada y seca.'},
+  {key:'l', rom:'[l]', letters:'ㄹ', word:'물', wordRom:'mul', meaning:'agua',
+   note:'ㄹ como batchim suena como una "l" clara (distinto al sonido entre r/l que tiene al inicio de sílaba).'},
+  {key:'m', rom:'[m]', letters:'ㅁ', word:'밤', wordRom:'bam', meaning:'noche / castaña',
+   note:'ㅁ como batchim cierra los labios, igual que al inicio — una "m" clara.'},
+  {key:'b', rom:'[p]', letters:'ㅂ, ㅍ', word:'밥', wordRom:'bap', meaning:'arroz cocido / comida',
+   note:'Tanto ㅂ como ㅍ, al final de sílaba, se simplifican a una "p" cerrada, sin soltar aire.'},
+  {key:'ng', rom:'[ng]', letters:'ㅇ', word:'강', wordRom:'gang', meaning:'río',
+   note:'ㅇ pasa de ser silenciosa (inicio de sílaba) a sonar "ng", como en la palabra inglesa "sing".'},
+];
+const M2_KEYS = [...COMPOUND_VOWELS.map(x=>x.g), ...DOUBLE_CONSONANTS.map(x=>x.g), ...BATCHIM_GROUPS.map(x=>'batchim-'+x.key)];
+
+/* ===================== STATE / STORAGE ===================== */
+const STORE_KEY = 'kimchi_progress_v1';
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {studied:{}, quizBest:0}; }
+  catch(e){ return {studied:{}, quizBest:0}; }
+}
+function saveProgress(p){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); }catch(e){} }
+let progress = loadProgress();
+function markStudied(g){ progress.studied[g]=true; saveProgress(progress); }
+function completionFor(keys){
+  const done = keys.filter(k=>progress.studied[k]).length;
+  return Math.round((done/keys.length)*100);
+}
+
+/* ===================== NAV ===================== */
+let route = {screen:'home'};
+function nav(r){ route = r; render(); window.scrollTo(0,0); }
+function back(){ nav({screen:'m1'}); }
+
+/* ===================== RENDER ===================== */
+const app = document.getElementById('app');
+function render(){
+  if(route.screen==='home') return renderHome();
+  if(route.screen==='m1') return renderM1();
+  if(route.screen==='m2') return renderM2();
+  if(route.screen==='study') return renderStudy();
+  if(route.screen==='batchim') return renderBatchim();
+  if(route.screen==='write') return renderWrite();
+  if(route.screen==='quiz') return renderQuiz();
+}
+
+function renderHome(){
+  const pct1 = completionFor(ALL.map(x=>x.g));
+  const pct2 = completionFor(M2_KEYS);
+  app.innerHTML = `
+    <div class="hero">
+      <div class="brand">
+        <img src="icon-192.png" alt="Kimchi">
+        <div>
+          <h1>Kimchi</h1>
+          <p>Coreano desde cero</p>
+        </div>
+      </div>
+    </div>
+    <div class="install-banner" id="installBanner">
+      <span>📲 Instala Kimchi en tu celular para usarla sin conexión</span>
+      <button id="installBtn">Instalar</button>
+      <span class="close" id="closeBanner">✕</span>
+    </div>
+    <div class="modules">
+      <div class="mcard" onclick="nav({screen:'m1'})">
+        <div class="icon c1">한</div>
+        <div class="info">
+          <h3>Módulo 1 — Hangul</h3>
+          <p>14 consonantes + 10 vocales, con escritura y mnemotecnia</p>
+          <div class="prog">${pct1}% completado</div>
+          <div class="bar"><div style="width:${pct1}%"></div></div>
+        </div>
+      </div>
+      <div class="mcard" onclick="nav({screen:'m2'})">
+        <div class="icon c2">組</div>
+        <div class="info">
+          <h3>Módulo 2 — Combinaciones</h3>
+          <p>Vocales compuestas, consonantes dobles, batchim</p>
+          <div class="prog">${pct2}% completado</div>
+          <div class="bar"><div style="width:${pct2}%"></div></div>
+        </div>
+      </div>
+      <div class="mcard locked">
+        <div class="icon c3">가</div>
+        <div class="info">
+          <h3>Módulo 3 — Lecto-escritura</h3>
+          <p>Sílabas, palabras y vocabulario cotidiano</p>
+        </div>
+      </div>
+    </div>
+  `;
+  setupInstallBanner();
+}
+
+function renderM1(){
+  const sub = route.tab || 'consonantes';
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick="nav({screen:'home'})">‹</div>
+      <div><h1>Módulo 1</h1><div class="sub">Hangul — el alfabeto coreano</div></div>
+    </header>
+    <div class="tabs">
+      <div class="tab ${sub==='consonantes'?'active':''}" onclick="nav({screen:'m1',tab:'consonantes'})">Consonantes</div>
+      <div class="tab ${sub==='vocales'?'active':''}" onclick="nav({screen:'m1',tab:'vocales'})">Vocales</div>
+      <div class="tab ${sub==='escritura'?'active':''}" onclick="nav({screen:'m1',tab:'escritura'})">Escritura</div>
+      <div class="tab ${sub==='repaso'?'active':''}" onclick="nav({screen:'m1',tab:'repaso'})">Repaso</div>
+    </div>
+  `;
+  if(sub==='consonantes') renderGrid(CONSONANTS,'c');
+  else if(sub==='vocales') renderGrid(VOWELS,'v');
+  else if(sub==='escritura') return renderWriteInline(ALL, 'm1');
+  else if(sub==='repaso') return renderQuizIntro(ALL, 'm1', {screen:'m1',tab:'repaso'});
+}
+
+function renderM2(){
+  const sub = route.tab || 'vocales';
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick="nav({screen:'home'})">‹</div>
+      <div><h1>Módulo 2</h1><div class="sub">Combinaciones</div></div>
+    </header>
+    <div class="tabs">
+      <div class="tab ${sub==='vocales'?'active':''}" onclick="nav({screen:'m2',tab:'vocales'})">V. compuestas</div>
+      <div class="tab ${sub==='dobles'?'active':''}" onclick="nav({screen:'m2',tab:'dobles'})">Dobles</div>
+      <div class="tab ${sub==='batchim'?'active':''}" onclick="nav({screen:'m2',tab:'batchim'})">Batchim</div>
+      <div class="tab ${sub==='escritura'?'active':''}" onclick="nav({screen:'m2',tab:'escritura'})">Escritura</div>
+      <div class="tab ${sub==='repaso'?'active':''}" onclick="nav({screen:'m2',tab:'repaso'})">Repaso</div>
+    </div>
+  `;
+  if(sub==='vocales') renderGrid(COMPOUND_VOWELS,'cv');
+  else if(sub==='dobles') renderGrid(DOUBLE_CONSONANTS,'dc');
+  else if(sub==='batchim') return renderBatchimGrid();
+  else if(sub==='escritura') return renderWriteInline([...COMPOUND_VOWELS.map(x=>({...x,type:'cv'})), ...DOUBLE_CONSONANTS.map(x=>({...x,type:'dc'}))], 'm2');
+  else if(sub==='repaso') return renderQuizIntro([...COMPOUND_VOWELS.map(x=>({...x,type:'cv'})), ...DOUBLE_CONSONANTS.map(x=>({...x,type:'dc'}))], 'm2', {screen:'m2',tab:'repaso'});
+}
+
+function renderBatchimGrid(){
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="section-label">Los 7 sonidos finales (받침)</div><div class="grid" style="grid-template-columns:repeat(2,1fr);">` +
+    BATCHIM_GROUPS.map((b,i)=>`
+      <div class="chip" style="aspect-ratio:auto; padding:14px 8px;" onclick="nav({screen:'batchim',index:${i}})">
+        <div class="dot ${progress.studied['batchim-'+b.key]?'done':''}"></div>
+        <div class="g kr" style="font-size:20px;">${b.rom}</div>
+        <div class="r kr" style="font-size:13px; margin-top:4px;">${b.letters}</div>
+      </div>`).join('') + `</div>
+      <p style="padding:6px 18px 16px; font-size:12.5px; color:var(--muted); line-height:1.5;">El batchim es la consonante que cierra una sílaba. Aunque hay muchas letras posibles, solo existen <b style="color:var(--ink);">7 sonidos finales</b> distintos — toca cada grupo para ver un ejemplo.</p>`;
+  app.appendChild(wrap);
+}
+
+function renderBatchim(){
+  const i = route.index;
+  const b = BATCHIM_GROUPS[i];
+  progress.studied['batchim-'+b.key] = true; saveProgress(progress);
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick="nav({screen:'m2',tab:'batchim'})">‹</div>
+      <div><h1>Batchim</h1><div class="sub">${i+1} de ${BATCHIM_GROUPS.length}</div></div>
+    </header>
+    <div class="study-wrap">
+      <div class="flash">
+        <div class="glyph" style="font-size:52px;">${b.rom}</div>
+        <div class="rom kr" style="font-size:22px;">${b.letters}</div>
+        <div class="sound">${b.note}</div>
+        <button class="audio-btn" onclick="speak('${b.word}')">🔊</button>
+        <div class="mnem">📝 Ejemplo: <b class="kr" style="font-size:16px;">${b.word}</b> (${b.wordRom}) — "${b.meaning}"</div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-secondary" ${i===0?'disabled':''} onclick="nav({screen:'batchim',index:${i-1}})">← Anterior</button>
+        <button class="btn-primary" ${i===BATCHIM_GROUPS.length-1?'disabled':''} onclick="nav({screen:'batchim',index:${i+1}})">Siguiente →</button>
+      </div>
+      <div class="progress-dots">${i+1} / ${BATCHIM_GROUPS.length}</div>
+    </div>
+  `;
+}
+
+function renderGrid(list, type){
+  const labels = {c:'Consonantes (자음)', v:'Vocales (모음)', cv:'Vocales compuestas (복합 모음)', dc:'Consonantes dobles (쌍자음)'};
+  const label = labels[type];
+  const grid = document.createElement('div');
+  grid.innerHTML = `<div class="section-label">${label}</div><div class="grid">` +
+    list.map((item,i)=>`
+      <div class="chip" onclick="nav({screen:'study',type:'${type}',index:${i}})">
+        <div class="dot ${progress.studied[item.g]?'done':''}"></div>
+        <div class="g kr">${item.g}</div>
+        <div class="r">${item.rom}</div>
+      </div>`).join('') + `</div>`;
+  app.appendChild(grid);
+}
+
+const STUDY_META = {
+  c:  {list:CONSONANTS, title:'Consonantes', tab:'consonantes', back:{screen:'m1',tab:'consonantes'}, writeList:ALL, writeMod:'m1'},
+  v:  {list:VOWELS, title:'Vocales', tab:'vocales', back:{screen:'m1',tab:'vocales'}, writeList:ALL, writeMod:'m1'},
+  cv: {list:COMPOUND_VOWELS, title:'Vocales compuestas', tab:'vocales', back:{screen:'m2',tab:'vocales'}, writeList:[...COMPOUND_VOWELS.map(x=>({...x,type:'cv'})), ...DOUBLE_CONSONANTS.map(x=>({...x,type:'dc'}))], writeMod:'m2'},
+  dc: {list:DOUBLE_CONSONANTS, title:'Consonantes dobles', tab:'dobles', back:{screen:'m2',tab:'dobles'}, writeList:[...COMPOUND_VOWELS.map(x=>({...x,type:'cv'})), ...DOUBLE_CONSONANTS.map(x=>({...x,type:'dc'}))], writeMod:'m2'},
+};
+function renderStudy(){
+  const meta = STUDY_META[route.type];
+  const list = meta.list;
+  const i = route.index;
+  const item = list[i];
+  markStudied(item.g);
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick='nav(${JSON.stringify(meta.back)})'>‹</div>
+      <div><h1>${meta.title}</h1><div class="sub">${i+1} de ${list.length}</div></div>
+    </header>
+    <div class="study-wrap">
+      <div class="flash">
+        <div class="glyph kr">${item.g}</div>
+        <div class="rom">${item.rom}</div>
+        <div class="sound">${item.name} — ${item.sound}</div>
+        <button class="audio-btn" onclick="speak('${item.g}')">🔊</button>
+        <div class="mnem">💡 ${item.mnem}</div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-secondary" ${i===0?'disabled':''} onclick="nav({screen:'study',type:'${route.type}',index:${i-1}})">← Anterior</button>
+        <button class="btn-primary" ${i===list.length-1?'disabled':''} onclick="nav({screen:'study',type:'${route.type}',index:${i+1}})">Siguiente →</button>
+      </div>
+      <div class="progress-dots">${i+1} / ${list.length}</div>
+      <div class="nav-row" style="margin-top:6px;">
+        <button class="btn-secondary" onclick="nav({screen:'write',type:'${route.type}',glyphIndex:${meta.writeList.findIndex(x=>x.g===item.g)}})">✍️ Practicar escritura</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- Writing practice ---------- */
+let writeState = {index:0, rep:1, list:ALL, mod:'m1'};
+function renderWriteInline(list, mod){
+  writeState = {index:0, rep:1, list, mod};
+  const wrap = document.createElement('div');
+  wrap.className = 'write-wrap';
+  app.appendChild(wrap);
+  drawWriteScreen(wrap);
+}
+function renderWrite(){
+  const mod = route.mod || (route.type==='cv'||route.type==='dc' ? 'm2' : 'm1');
+  const list = mod==='m2' ? [...COMPOUND_VOWELS.map(x=>({...x,type:'cv'})), ...DOUBLE_CONSONANTS.map(x=>({...x,type:'dc'}))] : ALL;
+  writeState = {index: route.glyphIndex || 0, rep:1, list, mod};
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick='nav({screen:"${mod}",tab:"escritura"})'>‹</div>
+      <div><h1>Escritura</h1><div class="sub">Practica trazando</div></div>
+    </header>
+  `;
+  const wrap = document.createElement('div');
+  wrap.className = 'write-wrap';
+  app.appendChild(wrap);
+  drawWriteScreen(wrap);
+}
+function drawWriteScreen(wrap){
+  const item = writeState.list[writeState.index];
+  wrap.innerHTML = `
+    <div class="letter-picker" id="letterPicker">
+      ${writeState.list.map((l,i)=>`<div class="lp-item ${i===writeState.index?'active':''} kr" onclick="selectWriteLetter(${i})">${l.g}</div>`).join('')}
+    </div>
+    <div class="write-info">
+      <div class="g kr">${item.g} <span style="color:var(--muted); font-size:14px;">(${item.rom})</span></div>
+    </div>
+    <div class="canvas-box">
+      <canvas id="traceCanvas"></canvas>
+    </div>
+    <div class="write-controls">
+      <button onclick="clearCanvas()">🧹 Borrar</button>
+      <button onclick="nextRep()">Siguiente plana ➜</button>
+    </div>
+    <div class="rep-counter">Repetición ${writeState.rep} de 5</div>
+  `;
+  setupCanvas(item.g);
+}
+function selectWriteLetter(i){ writeState.index = i; writeState.rep = 1; drawWriteScreen(document.querySelector('.write-wrap')); }
+function nextRep(){
+  writeState.rep = writeState.rep >= 5 ? 1 : writeState.rep + 1;
+  markStudied(writeState.list[writeState.index].g);
+  drawWriteScreen(document.querySelector('.write-wrap'));
+}
+
+let canvasCtx, drawing=false, guideOpacity;
+function setupCanvas(glyph){
+  const canvas = document.getElementById('traceCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.width * dpr; // square
+  canvasCtx = canvas.getContext('2d');
+  canvasCtx.scale(dpr, dpr);
+  canvasCtx.lineWidth = 10;
+  canvasCtx.lineCap = 'round';
+  canvasCtx.lineJoin = 'round';
+  canvasCtx.strokeStyle = '#1A1A2E';
+  guideOpacity = Math.max(0.06, 0.32 - (writeState.rep-1)*0.06); // fades as reps increase
+  drawGuide(canvas, rect.width, glyph);
+
+  const pos = e => {
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return {x: t.clientX - r.left, y: t.clientY - r.top};
+  };
+  const start = e => { e.preventDefault(); drawing=true; const p=pos(e); canvasCtx.beginPath(); canvasCtx.moveTo(p.x,p.y); };
+  const move = e => { if(!drawing) return; e.preventDefault(); const p=pos(e); canvasCtx.lineTo(p.x,p.y); canvasCtx.stroke(); };
+  const end = e => { drawing=false; };
+
+  canvas.onmousedown=start; canvas.onmousemove=move; canvas.onmouseup=end; canvas.onmouseleave=end;
+  canvas.ontouchstart=start; canvas.ontouchmove=move; canvas.ontouchend=end;
+
+  canvas._glyph = glyph; canvas._size = rect.width;
+}
+function drawGuide(canvas, size, glyph){
+  canvasCtx.save();
+  canvasCtx.globalAlpha = guideOpacity;
+  canvasCtx.font = `700 ${size*0.6}px 'Noto Sans KR', sans-serif`;
+  canvasCtx.textAlign = 'center';
+  canvasCtx.textBaseline = 'middle';
+  canvasCtx.fillStyle = '#1A1A2E';
+  canvasCtx.fillText(glyph, size/2, size/2 + size*0.03);
+  canvasCtx.restore();
+}
+function clearCanvas(){
+  const canvas = document.getElementById('traceCanvas');
+  canvasCtx.clearRect(0,0,canvas.width,canvas.height);
+  drawGuide(canvas, canvas._size, canvas._glyph);
+}
+
+/* ---------- Quiz ---------- */
+let quizState = {q:0, correct:0, total:10, sequence:[], pool:ALL, back:{screen:'m1',tab:'repaso'}, moduleLabel:'Módulo 1'};
+function renderQuizIntro(pool, mod, backRoute){
+  const label = mod==='m2' ? 'Módulo 2' : 'Módulo 1';
+  quizState.pool = pool; quizState.back = backRoute; quizState.moduleLabel = label; quizState.bestKey = 'quizBest_'+mod;
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="empty-hint">
+    <p style="font-size:15px; color:var(--ink); font-weight:700;">Repaso de ${label}</p>
+    <p>10 preguntas de opción múltiple.</p>
+    <button class="btn-primary" style="padding:14px 28px; border-radius:12px; border:none; font-weight:700; margin-top:10px;" onclick="startQuiz()">Comenzar repaso</button>
+  </div>`;
+  app.appendChild(wrap);
+}
+function startQuiz(){
+  const total = Math.min(10, quizState.pool.length);
+  const shuffled = [...quizState.pool].sort(()=>Math.random()-0.5).slice(0,total);
+  quizState = {...quizState, q:0, correct:0, total, sequence:shuffled};
+  nav({screen:'quiz'});
+}
+function renderQuiz(){
+  if(quizState.q >= quizState.total) return renderQuizResult();
+  const item = quizState.sequence[quizState.q];
+  const wrongPool = quizState.pool.filter(x=>x.g!==item.g && x.type===item.type);
+  const opts = [item, ...wrongPool.sort(()=>Math.random()-0.5).slice(0,3)].sort(()=>Math.random()-0.5);
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick='nav(${JSON.stringify(quizState.back)})'>‹</div>
+      <div><h1>Repaso</h1><div class="sub">Pregunta ${quizState.q+1} de ${quizState.total}</div></div>
+    </header>
+    <div class="quiz-wrap">
+      <div class="quiz-progress">${quizState.sequence.map((_,i)=>`<div class="${i<quizState.q?'done':''}"></div>`).join('')}</div>
+      <div style="text-align:center; color:var(--muted); font-size:13px;">¿Cuál es la romanización de esta letra?</div>
+      <div class="quiz-glyph kr">${item.g}</div>
+      <div class="quiz-options" id="quizOpts">
+        ${opts.map(o=>`<div class="qopt" onclick="answerQuiz('${o.g.replace(/'/g,"\\'")}','${item.g.replace(/'/g,"\\'")}',this)">${o.rom}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+function answerQuiz(chosenG, correctG, el){
+  const opts = document.querySelectorAll('.qopt');
+  opts.forEach(o=>o.onclick=null);
+  const isCorrect = chosenG === correctG;
+  if(isCorrect){ el.classList.add('correct'); quizState.correct++; }
+  else{
+    el.classList.add('wrong');
+    opts.forEach(o=>{ if(o.textContent === quizState.pool.find(x=>x.g===correctG).rom) o.classList.add('correct'); });
+  }
+  setTimeout(()=>{ quizState.q++; render(); }, 800);
+}
+function renderQuizResult(){
+  const pct = Math.round((quizState.correct/quizState.total)*100);
+  const bestKey = quizState.bestKey || 'quizBest_m1';
+  if(!progress[bestKey] || pct > progress[bestKey]){ progress[bestKey] = pct; saveProgress(progress); }
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick='nav(${JSON.stringify(quizState.back)})'>‹</div>
+      <div><h1>Resultado</h1></div>
+    </header>
+    <div class="quiz-result">
+      <div class="score">${quizState.correct}/${quizState.total}</div>
+      <p style="color:var(--muted);">${pct}% correcto — mejor puntaje: ${progress[bestKey]}%</p>
+      <button class="btn-primary" style="padding:14px 28px; border-radius:12px; border:none; font-weight:700; margin-top:14px;" onclick="startQuiz()">Repetir repaso</button>
+    </div>
+  `;
+}
+
+/* ===================== AUDIO (TTS) ===================== */
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR';
+  u.rate = 0.75;
+  const voices = speechSynthesis.getVoices();
+  const kr = voices.find(v=>v.lang && v.lang.toLowerCase().startsWith('ko'));
+  if(kr) u.voice = kr;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged = ()=>{}; }
+
+/* ===================== PWA install ===================== */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  const b = document.getElementById('installBanner');
+  if(b && !localStorage.getItem('kimchi_install_dismissed')) b.classList.add('show');
+});
+function setupInstallBanner(){
+  const btn = document.getElementById('installBtn');
+  const closeBtn = document.getElementById('closeBanner');
+  if(btn) btn.onclick = async ()=>{
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('installBanner').classList.remove('show');
+  };
+  if(closeBtn) closeBtn.onclick = ()=>{
+    document.getElementById('installBanner').classList.remove('show');
+    localStorage.setItem('kimchi_install_dismissed','1');
+  };
+}
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+
+/* ===================== INIT ===================== */
+render();
+</script>
+</body>
+</html>
