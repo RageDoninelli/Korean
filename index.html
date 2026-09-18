@@ -231,6 +231,73 @@ const BATCHIM_GROUPS = [
 ];
 const M2_KEYS = [...COMPOUND_VOWELS.map(x=>x.g), ...DOUBLE_CONSONANTS.map(x=>x.g), ...BATCHIM_GROUPS.map(x=>'batchim-'+x.key)];
 
+/* ---------- Module 3: Lecto-escritura ---------- */
+const INITIALS = [
+  {g:'ㄱ',rom:'g'},{g:'ㄲ',rom:'kk'},{g:'ㄴ',rom:'n'},{g:'ㄷ',rom:'d'},{g:'ㄸ',rom:'tt'},
+  {g:'ㄹ',rom:'r/l'},{g:'ㅁ',rom:'m'},{g:'ㅂ',rom:'b'},{g:'ㅃ',rom:'pp'},{g:'ㅅ',rom:'s'},
+  {g:'ㅆ',rom:'ss'},{g:'ㅇ',rom:''},{g:'ㅈ',rom:'j'},{g:'ㅉ',rom:'jj'},{g:'ㅊ',rom:'ch'},
+  {g:'ㅋ',rom:'k'},{g:'ㅌ',rom:'t'},{g:'ㅍ',rom:'p'},{g:'ㅎ',rom:'h'}
+]; // index === unicode initial index (0-18)
+const MEDIALS = [
+  {g:'ㅏ',rom:'a'},{g:'ㅐ',rom:'ae'},{g:'ㅑ',rom:'ya'},{g:'ㅒ',rom:'yae'},{g:'ㅓ',rom:'eo'},
+  {g:'ㅔ',rom:'e'},{g:'ㅕ',rom:'yeo'},{g:'ㅖ',rom:'ye'},{g:'ㅗ',rom:'o'},{g:'ㅘ',rom:'wa'},
+  {g:'ㅙ',rom:'wae'},{g:'ㅚ',rom:'oe'},{g:'ㅛ',rom:'yo'},{g:'ㅜ',rom:'u'},{g:'ㅝ',rom:'wo'},
+  {g:'ㅞ',rom:'we'},{g:'ㅟ',rom:'wi'},{g:'ㅠ',rom:'yu'},{g:'ㅡ',rom:'eu'},{g:'ㅢ',rom:'ui'},{g:'ㅣ',rom:'i'}
+]; // index === unicode medial index (0-20)
+const FINAL_OPTIONS = [
+  {g:'—', rom:'', idx:0},
+  {g:'ㄱ', rom:'k', idx:1},
+  {g:'ㄴ', rom:'n', idx:4},
+  {g:'ㄷ', rom:'t', idx:7},
+  {g:'ㄹ', rom:'l', idx:8},
+  {g:'ㅁ', rom:'m', idx:16},
+  {g:'ㅂ', rom:'p', idx:17},
+  {g:'ㅇ', rom:'ng', idx:21},
+];
+function composeSyllable(iIdx, mIdx, fIdx){
+  return String.fromCharCode(0xAC00 + (iIdx*21 + mIdx)*28 + fIdx);
+}
+
+const VOCAB = [
+  // Saludos y cortesía
+  {hangul:'안녕하세요', rom:'annyeonghaseyo', meaning:'hola (formal)', group:'Saludos'},
+  {hangul:'감사합니다', rom:'gamsahamnida', meaning:'gracias (formal)', group:'Saludos'},
+  {hangul:'네', rom:'ne', meaning:'sí', group:'Saludos'},
+  {hangul:'아니요', rom:'aniyo', meaning:'no', group:'Saludos'},
+  {hangul:'미안해요', rom:'mianhaeyo', meaning:'perdón, lo siento', group:'Saludos'},
+  // Familia y personas
+  {hangul:'엄마', rom:'eomma', meaning:'mamá', group:'Familia'},
+  {hangul:'아빠', rom:'appa', meaning:'papá', group:'Familia'},
+  {hangul:'친구', rom:'chingu', meaning:'amigo/a', group:'Familia'},
+  {hangul:'언니', rom:'eonni', meaning:'hermana mayor (dicho por mujer)', group:'Familia'},
+  {hangul:'오빠', rom:'oppa', meaning:'hermano mayor (dicho por mujer)', group:'Familia'},
+  // Comida
+  {hangul:'밥', rom:'bap', meaning:'arroz / comida', group:'Comida'},
+  {hangul:'물', rom:'mul', meaning:'agua', group:'Comida'},
+  {hangul:'김치', rom:'gimchi', meaning:'kimchi', group:'Comida'},
+  {hangul:'라면', rom:'ramyeon', meaning:'ramen coreano', group:'Comida'},
+  {hangul:'과일', rom:'gwail', meaning:'fruta', group:'Comida'},
+  // Números nativos 1-5
+  {hangul:'하나', rom:'hana', meaning:'uno (nativo)', group:'Números nativos'},
+  {hangul:'둘', rom:'dul', meaning:'dos (nativo)', group:'Números nativos'},
+  {hangul:'셋', rom:'set', meaning:'tres (nativo)', group:'Números nativos'},
+  {hangul:'넷', rom:'net', meaning:'cuatro (nativo)', group:'Números nativos'},
+  {hangul:'다섯', rom:'daseot', meaning:'cinco (nativo)', group:'Números nativos'},
+  // Números sino-coreanos 1-5
+  {hangul:'일', rom:'il', meaning:'uno (sino-coreano)', group:'Números sino-coreanos'},
+  {hangul:'이', rom:'i', meaning:'dos (sino-coreano)', group:'Números sino-coreanos'},
+  {hangul:'삼', rom:'sam', meaning:'tres (sino-coreano)', group:'Números sino-coreanos'},
+  {hangul:'사', rom:'sa', meaning:'cuatro (sino-coreano)', group:'Números sino-coreanos'},
+  {hangul:'오', rom:'o', meaning:'cinco (sino-coreano)', group:'Números sino-coreanos'},
+  // Objetos cotidianos
+  {hangul:'집', rom:'jip', meaning:'casa', group:'Objetos'},
+  {hangul:'학교', rom:'hakgyo', meaning:'escuela', group:'Objetos'},
+  {hangul:'책', rom:'chaek', meaning:'libro', group:'Objetos'},
+  {hangul:'돈', rom:'don', meaning:'dinero', group:'Objetos'},
+  {hangul:'시간', rom:'sigan', meaning:'tiempo', group:'Objetos'},
+];
+const M3_KEYS = VOCAB.map(w=>w.hangul);
+
 /* ===================== STATE / STORAGE ===================== */
 const STORE_KEY = 'kimchi_progress_v1';
 function loadProgress(){
@@ -256,15 +323,19 @@ function render(){
   if(route.screen==='home') return renderHome();
   if(route.screen==='m1') return renderM1();
   if(route.screen==='m2') return renderM2();
+  if(route.screen==='m3') return renderM3();
   if(route.screen==='study') return renderStudy();
   if(route.screen==='batchim') return renderBatchim();
+  if(route.screen==='vocabstudy') return renderVocabStudy();
   if(route.screen==='write') return renderWrite();
   if(route.screen==='quiz') return renderQuiz();
+  if(route.screen==='wordquiz') return renderWordQuiz();
 }
 
 function renderHome(){
   const pct1 = completionFor(ALL.map(x=>x.g));
   const pct2 = completionFor(M2_KEYS);
+  const pct3 = completionFor(M3_KEYS);
   app.innerHTML = `
     <div class="hero">
       <div class="brand">
@@ -299,11 +370,20 @@ function renderHome(){
           <div class="bar"><div style="width:${pct2}%"></div></div>
         </div>
       </div>
-      <div class="mcard locked">
+      <div class="mcard" onclick="nav({screen:'m3'})">
         <div class="icon c3">가</div>
         <div class="info">
           <h3>Módulo 3 — Lecto-escritura</h3>
-          <p>Sílabas, palabras y vocabulario cotidiano</p>
+          <p>Sílabas, vocabulario cotidiano y dictado</p>
+          <div class="prog">${pct3}% completado</div>
+          <div class="bar"><div style="width:${pct3}%"></div></div>
+        </div>
+      </div>
+      <div class="mcard locked">
+        <div class="icon c1" style="background:var(--ink);">文</div>
+        <div class="info">
+          <h3>Módulo 4 — Gramática básica</h3>
+          <p>Partículas, verbos, adjetivos y tiempos (estilo V.I.V.A.)</p>
         </div>
       </div>
     </div>
@@ -443,7 +523,209 @@ function renderStudy(){
   `;
 }
 
-/* ---------- Writing practice ---------- */
+/* ---------- Module 3 screens ---------- */
+let builderState = {iIdx:0, mIdx:0, fIdx:0};
+function renderM3(){
+  const sub = route.tab || 'silabas';
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick="nav({screen:'home'})">‹</div>
+      <div><h1>Módulo 3</h1><div class="sub">Lecto-escritura</div></div>
+    </header>
+    <div class="tabs">
+      <div class="tab ${sub==='silabas'?'active':''}" onclick="nav({screen:'m3',tab:'silabas'})">Sílabas</div>
+      <div class="tab ${sub==='vocabulario'?'active':''}" onclick="nav({screen:'m3',tab:'vocabulario'})">Vocabulario</div>
+      <div class="tab ${sub==='dictado'?'active':''}" onclick="nav({screen:'m3',tab:'dictado'})">Dictado</div>
+      <div class="tab ${sub==='repaso'?'active':''}" onclick="nav({screen:'m3',tab:'repaso'})">Repaso</div>
+    </div>
+  `;
+  if(sub==='silabas') renderSyllables();
+  else if(sub==='vocabulario') renderVocabGrid();
+  else if(sub==='dictado') renderWordQuizIntro('dictado', {screen:'m3',tab:'dictado'});
+  else if(sub==='repaso') renderWordQuizIntro('repaso', {screen:'m3',tab:'repaso'});
+}
+
+function renderSyllables(){
+  const wrap = document.createElement('div');
+  wrap.className = 'write-wrap';
+  wrap.innerHTML = `
+    <div class="flash" style="text-align:left; padding:18px;">
+      <p style="margin:0 0 10px; font-size:14px; line-height:1.55;">Cada sílaba coreana se escribe dentro de un <b>bloque</b> que combina: <b>consonante inicial</b> (초성) + <b>vocal</b> (중성) + opcionalmente una <b>consonante final o batchim</b> (종성).</p>
+      <p style="margin:0 0 14px; font-size:14px; line-height:1.55;">El acomodo depende de la vocal: si es <b>vertical</b> (ㅏ, ㅓ, ㅣ...) la consonante va a la <b>izquierda</b>; si es <b>horizontal</b> (ㅗ, ㅜ, ㅡ...) la consonante va <b>arriba</b>.</p>
+      <div style="display:flex; gap:14px; justify-content:center; padding:6px 0;">
+        <div style="text-align:center;"><div class="kr" style="font-size:44px; font-weight:700;">가</div><div style="font-size:11px; color:var(--muted);">ㄱ+ㅏ lado a lado</div></div>
+        <div style="text-align:center;"><div class="kr" style="font-size:44px; font-weight:700;">고</div><div style="font-size:11px; color:var(--muted);">ㄱ+ㅗ apilado</div></div>
+        <div style="text-align:center;"><div class="kr" style="font-size:44px; font-weight:700;">공</div><div style="font-size:11px; color:var(--muted);">+ ㅇ batchim</div></div>
+      </div>
+    </div>
+    <div class="section-label" style="padding-left:0; margin-top:16px;">Constructor de sílabas</div>
+    <div class="canvas-box" style="margin-top:8px; padding:22px 10px;">
+      <div id="builderPreview" class="kr" style="font-size:80px; font-weight:700;"></div>
+      <div id="builderRom" style="font-size:13px; color:var(--muted); margin-top:4px;"></div>
+    </div>
+    <div style="margin-top:14px;">
+      <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:6px;">Consonante inicial</div>
+      <div class="letter-picker" id="pickInitial"></div>
+      <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin:10px 0 6px;">Vocal</div>
+      <div class="letter-picker" id="pickMedial"></div>
+      <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin:10px 0 6px;">Batchim (opcional)</div>
+      <div class="letter-picker" id="pickFinal"></div>
+    </div>
+    <div class="nav-row" style="margin-top:14px;">
+      <button class="btn-secondary" onclick="speak(document.getElementById('builderPreview').textContent)">🔊 Escuchar</button>
+    </div>
+  `;
+  app.appendChild(wrap);
+  document.getElementById('pickInitial').innerHTML = INITIALS.map((x,i)=>`<div class="lp-item ${i===builderState.iIdx?'active':''} kr" onclick="setBuilder('i',${i})">${x.g}</div>`).join('');
+  document.getElementById('pickMedial').innerHTML = MEDIALS.map((x,i)=>`<div class="lp-item ${i===builderState.mIdx?'active':''} kr" onclick="setBuilder('m',${i})">${x.g}</div>`).join('');
+  document.getElementById('pickFinal').innerHTML = FINAL_OPTIONS.map((x,i)=>`<div class="lp-item ${i===builderState.fIdx?'active':''} kr" onclick="setBuilder('f',${i})">${x.g}</div>`).join('');
+  updateBuilderPreview();
+}
+function setBuilder(which, i){
+  if(which==='i') builderState.iIdx = i;
+  if(which==='m') builderState.mIdx = i;
+  if(which==='f') builderState.fIdx = i;
+  progress.studied['m3-builder'] = true; saveProgress(progress);
+  renderSyllables();
+}
+function updateBuilderPreview(){
+  const fOpt = FINAL_OPTIONS[builderState.fIdx];
+  const syll = composeSyllable(builderState.iIdx, builderState.mIdx, fOpt.idx);
+  const iRom = INITIALS[builderState.iIdx].rom.split('/')[0];
+  const mRom = MEDIALS[builderState.mIdx].rom;
+  const rom = iRom + mRom + fOpt.rom;
+  document.getElementById('builderPreview').textContent = syll;
+  document.getElementById('builderRom').textContent = 'Romanización aproximada: ' + rom;
+}
+
+function renderVocabGrid(){
+  const wrap = document.createElement('div');
+  let html = '';
+  const groups = [...new Set(VOCAB.map(w=>w.group))];
+  groups.forEach(gr=>{
+    html += `<div class="section-label">${gr}</div><div class="grid">`;
+    VOCAB.forEach((w,i)=>{
+      if(w.group!==gr) return;
+      html += `<div class="chip" style="aspect-ratio:auto; padding:14px 6px;" onclick="nav({screen:'vocabstudy',index:${i}})">
+        <div class="dot ${progress.studied[w.hangul]?'done':''}"></div>
+        <div class="g kr" style="font-size:19px;">${w.hangul}</div>
+        <div class="r" style="font-size:9.5px;">${w.rom}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  wrap.innerHTML = html;
+  app.appendChild(wrap);
+}
+
+function renderVocabStudy(){
+  const i = route.index;
+  const item = VOCAB[i];
+  progress.studied[item.hangul] = true; saveProgress(progress);
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick="nav({screen:'m3',tab:'vocabulario'})">‹</div>
+      <div><h1>Vocabulario</h1><div class="sub">${item.group} — ${i+1} de ${VOCAB.length}</div></div>
+    </header>
+    <div class="study-wrap">
+      <div class="flash">
+        <div class="glyph kr" style="font-size:54px;">${item.hangul}</div>
+        <div class="rom">${item.rom}</div>
+        <div class="sound">${item.meaning}</div>
+        <button class="audio-btn" onclick="speak('${item.hangul}')">🔊</button>
+      </div>
+      <div class="nav-row">
+        <button class="btn-secondary" ${i===0?'disabled':''} onclick="nav({screen:'vocabstudy',index:${i-1}})">← Anterior</button>
+        <button class="btn-primary" ${i===VOCAB.length-1?'disabled':''} onclick="nav({screen:'vocabstudy',index:${i+1}})">Siguiente →</button>
+      </div>
+      <div class="progress-dots">${i+1} / ${VOCAB.length}</div>
+    </div>
+  `;
+}
+
+/* ---------- Word quiz (dictado + repaso, Módulo 3) ---------- */
+let wordQuizState = {mode:'dictado', q:0, correct:0, total:10, sequence:[], back:{screen:'m3',tab:'dictado'}};
+function renderWordQuizIntro(mode, backRoute){
+  wordQuizState.mode = mode; wordQuizState.back = backRoute;
+  const label = mode==='dictado' ? 'Dictado' : 'Repaso';
+  const desc = mode==='dictado' ? 'Escucha la palabra y elige la escritura correcta.' : 'Lee la palabra y elige el significado correcto.';
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="empty-hint">
+    <p style="font-size:15px; color:var(--ink); font-weight:700;">${label} — Módulo 3</p>
+    <p>${desc}</p>
+    <button class="btn-primary" style="padding:14px 28px; border-radius:12px; border:none; font-weight:700; margin-top:10px;" onclick="startWordQuiz()">Comenzar</button>
+  </div>`;
+  app.appendChild(wrap);
+}
+function startWordQuiz(){
+  const total = Math.min(10, VOCAB.length);
+  const shuffled = [...VOCAB].sort(()=>Math.random()-0.5).slice(0,total);
+  wordQuizState = {...wordQuizState, q:0, correct:0, total, sequence:shuffled};
+  nav({screen:'wordquiz'});
+}
+function renderWordQuiz(){
+  if(wordQuizState.q >= wordQuizState.total) return renderWordQuizResult();
+  const item = wordQuizState.sequence[wordQuizState.q];
+  const sameGroup = VOCAB.filter(x=>x.hangul!==item.hangul && x.group===item.group);
+  const otherGroup = VOCAB.filter(x=>x.hangul!==item.hangul && x.group!==item.group);
+  const distractors = [...sameGroup, ...otherGroup].sort(()=>Math.random()-0.5).slice(0,3);
+  const opts = [item, ...distractors].sort(()=>Math.random()-0.5);
+  const isDictado = wordQuizState.mode==='dictado';
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick='nav(${JSON.stringify(wordQuizState.back)})'>‹</div>
+      <div><h1>${isDictado?'Dictado':'Repaso'}</h1><div class="sub">Pregunta ${wordQuizState.q+1} de ${wordQuizState.total}</div></div>
+    </header>
+    <div class="quiz-wrap">
+      <div class="quiz-progress">${wordQuizState.sequence.map((_,i)=>`<div class="${i<wordQuizState.q?'done':''}"></div>`).join('')}</div>
+      ${isDictado ? `
+        <div style="text-align:center; color:var(--muted); font-size:13px;">Escucha y elige la palabra correcta</div>
+        <div style="text-align:center; margin:24px 0;"><button class="audio-btn" style="width:64px; height:64px; font-size:28px;" onclick="speak('${item.hangul}')">🔊</button></div>
+        <div class="quiz-options">
+          ${opts.map(o=>`<div class="qopt kr" style="font-size:19px;" onclick="answerWordQuiz('${o.hangul}','${item.hangul}',this)">${o.hangul}</div>`).join('')}
+        </div>
+      ` : `
+        <div style="text-align:center; color:var(--muted); font-size:13px;">¿Qué significa esta palabra?</div>
+        <div class="quiz-glyph kr" style="font-size:46px;">${item.hangul}</div>
+        <div style="text-align:center; margin-bottom:14px;"><button class="audio-btn" onclick="speak('${item.hangul}')">🔊</button></div>
+        <div class="quiz-options" style="grid-template-columns:1fr;">
+          ${opts.map(o=>`<div class="qopt" style="font-size:14px; text-align:left;" onclick="answerWordQuiz('${o.hangul}','${item.hangul}',this)">${o.meaning}</div>`).join('')}
+        </div>
+      `}
+    </div>
+  `;
+}
+function answerWordQuiz(chosenHangul, correctHangul, el){
+  const opts = document.querySelectorAll('.qopt');
+  opts.forEach(o=>o.onclick=null);
+  const isCorrect = chosenHangul === correctHangul;
+  if(isCorrect){ el.classList.add('correct'); wordQuizState.correct++; }
+  else{
+    el.classList.add('wrong');
+    const correctItem = VOCAB.find(x=>x.hangul===correctHangul);
+    const correctText = wordQuizState.mode==='dictado' ? correctItem.hangul : correctItem.meaning;
+    opts.forEach(o=>{ if(o.textContent===correctText) o.classList.add('correct'); });
+  }
+  setTimeout(()=>{ wordQuizState.q++; render(); }, 800);
+}
+function renderWordQuizResult(){
+  const pct = Math.round((wordQuizState.correct/wordQuizState.total)*100);
+  const bestKey = 'quizBest_m3_'+wordQuizState.mode;
+  if(!progress[bestKey] || pct > progress[bestKey]){ progress[bestKey] = pct; saveProgress(progress); }
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick='nav(${JSON.stringify(wordQuizState.back)})'>‹</div>
+      <div><h1>Resultado</h1></div>
+    </header>
+    <div class="quiz-result">
+      <div class="score">${wordQuizState.correct}/${wordQuizState.total}</div>
+      <p style="color:var(--muted);">${pct}% correcto — mejor puntaje: ${progress[bestKey]}%</p>
+      <button class="btn-primary" style="padding:14px 28px; border-radius:12px; border:none; font-weight:700; margin-top:14px;" onclick="startWordQuiz()">Repetir</button>
+    </div>
+  `;
+}
+
+
 let writeState = {index:0, rep:1, list:ALL, mod:'m1'};
 function renderWriteInline(list, mod){
   writeState = {index:0, rep:1, list, mod};
