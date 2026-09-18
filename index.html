@@ -298,6 +298,380 @@ const VOCAB = [
 ];
 const M3_KEYS = VOCAB.map(w=>w.hangul);
 
+/* ---------- Module 4: Gramática básica (V.I.V.A.) ---------- */
+const LESSONS = [
+  {
+    id:1, title:'이다 y 은/는', subtitle:'Presentarte',
+    vocab: [
+      {hangul:'저', rom:'jeo', meaning:'yo (formal/educado)'},
+      {hangul:'이름', rom:'ireum', meaning:'nombre'},
+      {hangul:'학생', rom:'haksaeng', meaning:'estudiante'},
+      {hangul:'선생님', rom:'seonsaengnim', meaning:'profesor/a'},
+      {hangul:'한국', rom:'hanguk', meaning:'Corea'},
+      {hangul:'나라', rom:'nara', meaning:'país'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'안녕하세요. 저는 하나예요.', rom:'annyeonghaseyo. jeoneun hanayeyo.', es:'Hola. Yo soy Hana.'},
+      {sp:'B', hangul:'안녕하세요. 저는 민수예요. 만나서 반가워요.', rom:'annyeonghaseyo. jeoneun minsuyeyo. mannaseo bangawoyo.', es:'Hola. Yo soy Minsu. Mucho gusto.'},
+      {sp:'A', hangul:'민수 씨는 학생이에요?', rom:'minsu ssineun haksaengieyo?', es:'Minsu, ¿eres estudiante?'},
+      {sp:'B', hangul:'네, 저는 학생이에요. 하나 씨는요?', rom:'ne, jeoneun haksaengieyo. hana ssineunyo?', es:'Sí, soy estudiante. ¿Y tú, Hana?'},
+      {sp:'A', hangul:'저도 학생이에요.', rom:'jeodo haksaengieyo.', es:'Yo también soy estudiante.'},
+    ],
+    grammarIntro:'<b>이다</b> equivale a "ser/estar" para identidad (soy X, es X). En estilo educado informal se usa <b>이에요</b> (tras consonante) o <b>예요</b> (tras vocal). La partícula <b>은/는</b> marca el tema de la oración ("en cuanto a...") — <b>은</b> tras consonante, <b>는</b> tras vocal.',
+    grammarRows: [
+      {p:'Consonante + 이에요', e:'학생이에요', es:'es/soy estudiante'},
+      {p:'Vocal + 예요', e:'친구예요', es:'es/soy amigo/a'},
+      {p:'Formal: + 입니다', e:'학생입니다', es:'es/soy estudiante (formal)'},
+      {p:'은 (tras consonante)', e:'선생님은...', es:'en cuanto al profesor...'},
+      {p:'는 (tras vocal)', e:'하나는...', es:'en cuanto a Hana...'},
+    ],
+    exercises: [
+      {q:'저는 학생___. (completa)', opts:['이에요','예요','입니까','을'], correct:'이에요'},
+      {q:'이것은 책___. (esto es un libro)', opts:['예요','이에요','는','가'], correct:'이에요'},
+      {q:'친구 termina en vocal. ¿Qué partícula de tema usa?', opts:['은','는','이','가'], correct:'는'},
+      {q:'선생님 termina en consonante. ¿Qué partícula de tema usa?', opts:['은','는','을','를'], correct:'은'},
+      {q:'¿Cómo se dice "Soy coreano/a"?', opts:['한국 사람이에요','한국 사람이다','한국사람는','한국사람이요'], correct:'한국 사람이에요'},
+    ],
+  },
+  {
+    id:2, title:'있다/없다 y 이/가', subtitle:'Ubicación y posesión',
+    vocab: [
+      {hangul:'여기', rom:'yeogi', meaning:'aquí'},
+      {hangul:'저기', rom:'jeogi', meaning:'allá'},
+      {hangul:'책상', rom:'chaeksang', meaning:'escritorio'},
+      {hangul:'의자', rom:'uija', meaning:'silla'},
+      {hangul:'가방', rom:'gabang', meaning:'bolsa / mochila'},
+      {hangul:'고양이', rom:'goyangi', meaning:'gato'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'가방 안에 뭐가 있어요?', rom:'gabang ane mwoga isseoyo?', es:'¿Qué hay dentro de la bolsa?'},
+      {sp:'B', hangul:'책이 있어요. 그리고 돈도 있어요.', rom:'chaegi isseoyo. geurigo dondo isseoyo.', es:'Hay un libro. Y también hay dinero.'},
+      {sp:'A', hangul:'고양이가 있어요?', rom:'goyangiga isseoyo?', es:'¿Hay un gato?'},
+      {sp:'B', hangul:'아니요, 고양이는 없어요.', rom:'aniyo, goyangineun eopseoyo.', es:'No, gato no hay.'},
+    ],
+    grammarIntro:'<b>있다</b> significa "haber/estar/tener" y <b>없다</b> su negativo ("no haber/no tener"). La partícula <b>이/가</b> marca el sujeto gramatical de la oración — <b>이</b> tras consonante, <b>가</b> tras vocal.',
+    grammarRows: [
+      {p:'Consonante + 이', e:'책이 있어요', es:'hay un libro'},
+      {p:'Vocal + 가', e:'의자가 있어요', es:'hay una silla'},
+      {p:'있어요', e:'돈이 있어요', es:'hay/tengo dinero'},
+      {p:'없어요', e:'고양이가 없어요', es:'no hay gato'},
+    ],
+    exercises: [
+      {q:'책 termina en consonante. ¿Qué partícula de sujeto usa?', opts:['이','가','은','는'], correct:'이'},
+      {q:'의자 termina en vocal. ¿Qué partícula de sujeto usa?', opts:['이','가','을','를'], correct:'가'},
+      {q:'"Tengo bolsa" → 가방이 ___', opts:['있어요','없어요','이에요','해요'], correct:'있어요'},
+      {q:'Traduce: "No tengo dinero"', opts:['돈이 없어요','돈이 있어요','돈은 이에요','돈가 없어요'], correct:'돈이 없어요'},
+    ],
+  },
+  {
+    id:3, title:'Verbos presente -아요/어요', subtitle:'Acciones cotidianas',
+    vocab: [
+      {hangul:'가다', rom:'gada', meaning:'ir'},
+      {hangul:'오다', rom:'oda', meaning:'venir'},
+      {hangul:'먹다', rom:'meokda', meaning:'comer'},
+      {hangul:'마시다', rom:'masida', meaning:'beber'},
+      {hangul:'읽다', rom:'ikda', meaning:'leer'},
+      {hangul:'하다', rom:'hada', meaning:'hacer'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'뭐 해요?', rom:'mwo haeyo?', es:'¿Qué haces?'},
+      {sp:'B', hangul:'책을 읽어요.', rom:'chaegeul ilgeoyo.', es:'Leo un libro.'},
+      {sp:'A', hangul:'커피 마셔요?', rom:'keopi masyeoyo?', es:'¿Tomas café?'},
+      {sp:'B', hangul:'네, 마셔요.', rom:'ne, masyeoyo.', es:'Sí, tomo.'},
+    ],
+    grammarIntro:'Para el presente educado informal: quita 다 del verbo y mira la última vocal de la raíz. Si es <b>ㅏ</b> o <b>ㅗ</b>, agrega <b>아요</b>; en cualquier otro caso, agrega <b>어요</b>. <b>하다</b> es especial: siempre se vuelve <b>해요</b>. Algunas combinaciones tienen contracciones (오+아요→와요) que se aprenden con la práctica.',
+    grammarRows: [
+      {p:'가다 → 가요', e:'학교에 가요', es:'voy a la escuela'},
+      {p:'먹다 → 먹어요', e:'밥을 먹어요', es:'como arroz/comida'},
+      {p:'하다 → 해요', e:'운동해요', es:'hago ejercicio'},
+      {p:'오다 → 와요', e:'친구가 와요', es:'un amigo viene'},
+      {p:'마시다 → 마셔요', e:'물을 마셔요', es:'bebo agua'},
+    ],
+    exercises: [
+      {q:'가다 → forma presente educada', opts:['가요','가어요','간다','가다요'], correct:'가요'},
+      {q:'먹다 → forma presente educada', opts:['먹아요','먹어요','먹다요','먹요'], correct:'먹어요'},
+      {q:'하다 → forma presente educada', opts:['하아요','하어요','해요','하요'], correct:'해요'},
+      {q:'오다 → forma presente educada', opts:['오아요','와요','오어요','오요'], correct:'와요'},
+    ],
+  },
+  {
+    id:4, title:'을/를 y negación 안', subtitle:'Rutina diaria',
+    vocab: [
+      {hangul:'아침', rom:'achim', meaning:'mañana / desayuno'},
+      {hangul:'점심', rom:'jeomsim', meaning:'almuerzo'},
+      {hangul:'저녁', rom:'jeonyeok', meaning:'cena / noche'},
+      {hangul:'운동하다', rom:'undonghada', meaning:'hacer ejercicio'},
+      {hangul:'일하다', rom:'ilhada', meaning:'trabajar'},
+      {hangul:'오늘', rom:'oneul', meaning:'hoy'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'아침에 운동해요?', rom:'achime undonghaeyo?', es:'¿Haces ejercicio en la mañana?'},
+      {sp:'B', hangul:'아니요, 아침에는 운동 안 해요. 저녁에 운동해요.', rom:'aniyo, achimeneun undong an haeyo. jeonyeoge undonghaeyo.', es:'No, en la mañana no hago ejercicio. Hago ejercicio en la noche.'},
+      {sp:'A', hangul:'점심을 먹어요?', rom:'jeomsimeul meogeoyo?', es:'¿Almuerzas?'},
+      {sp:'B', hangul:'네, 점심을 먹어요.', rom:'ne, jeomsimeul meogeoyo.', es:'Sí, almuerzo.'},
+    ],
+    grammarIntro:'La partícula <b>을/를</b> marca el objeto directo del verbo — <b>을</b> tras consonante, <b>를</b> tras vocal. Para negar una acción de forma simple, se coloca <b>안</b> justo antes del verbo.',
+    grammarRows: [
+      {p:'Consonante + 을', e:'밥을 먹어요', es:'como comida'},
+      {p:'Vocal + 를', e:'커피를 마셔요', es:'tomo café'},
+      {p:'안 + verbo', e:'안 가요', es:'no voy'},
+      {p:'안 + 하다 (dividido)', e:'운동 안 해요', es:'no hago ejercicio'},
+    ],
+    exercises: [
+      {q:'밥 termina en consonante. "Como comida" → 밥___먹어요', opts:['을','를','이','가'], correct:'을'},
+      {q:'커피 termina en vocal. "Tomo café" → 커피___마셔요', opts:['을','를','은','는'], correct:'를'},
+      {q:'Niega la oración: 가요 →', opts:['안 가요','가 안요','가요 안','안가요다'], correct:'안 가요'},
+      {q:'Traduce: "Hoy no trabajo"', opts:['오늘 일 안 해요','오늘 안 일해요','오늘 일해요 안','오늘 일 없어요'], correct:'오늘 일 안 해요'},
+    ],
+  },
+  {
+    id:5, title:'Pasado -았어요/었어요', subtitle:'Contar el día',
+    vocab: [
+      {hangul:'어제', rom:'eoje', meaning:'ayer'},
+      {hangul:'영화', rom:'yeonghwa', meaning:'película'},
+      {hangul:'만나다', rom:'mannada', meaning:'encontrarse con alguien'},
+      {hangul:'사다', rom:'sada', meaning:'comprar'},
+      {hangul:'보다', rom:'boda', meaning:'ver'},
+      {hangul:'재미있다', rom:'jaemiitda', meaning:'ser divertido/interesante'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'어제 뭐 했어요?', rom:'eoje mwo haesseoyo?', es:'¿Qué hiciste ayer?'},
+      {sp:'B', hangul:'영화를 봤어요. 그리고 친구를 만났어요.', rom:'yeonghwareul bwasseoyo. geurigo chingureul mannasseoyo.', es:'Vi una película. Y me encontré con un amigo.'},
+      {sp:'A', hangul:'재미있었어요?', rom:'jaemiisseosseoyo?', es:'¿Fue divertida?'},
+      {sp:'B', hangul:'네, 정말 재미있었어요!', rom:'ne, jeongmal jaemiisseosseoyo!', es:'¡Sí, fue muy divertida!'},
+    ],
+    grammarIntro:'El pasado educado informal usa la misma regla de vocal que el presente, pero con <b>았어요</b> (si la raíz termina en ㅏ/ㅗ) o <b>었어요</b> (los demás casos). <b>하다</b> se vuelve <b>했어요</b>.',
+    grammarRows: [
+      {p:'가다 → 갔어요', e:'학교에 갔어요', es:'fui a la escuela'},
+      {p:'먹다 → 먹었어요', e:'밥을 먹었어요', es:'comí'},
+      {p:'하다 → 했어요', e:'숙제 했어요', es:'hice tarea'},
+      {p:'보다 → 봤어요', e:'영화를 봤어요', es:'vi una película'},
+      {p:'사다 → 샀어요', e:'책을 샀어요', es:'compré un libro'},
+    ],
+    exercises: [
+      {q:'가다 → pasado', opts:['갔어요','가았어요','가어요','간어요'], correct:'갔어요'},
+      {q:'먹다 → pasado', opts:['먹아요','먹었어요','먹아았어요','먹다어요'], correct:'먹었어요'},
+      {q:'하다 → pasado', opts:['하았어요','했어요','하어요','하였다'], correct:'했어요'},
+      {q:'보다 → pasado', opts:['보았어요','봤어요','보어요','보다요'], correct:'봤어요'},
+    ],
+  },
+  {
+    id:6, title:'Adjetivos y palabras interrogativas', subtitle:'Preguntas y descripciones',
+    vocab: [
+      {hangul:'크다', rom:'keuda', meaning:'ser grande'},
+      {hangul:'작다', rom:'jakda', meaning:'ser pequeño'},
+      {hangul:'맛있다', rom:'masitda', meaning:'estar rico/sabroso'},
+      {hangul:'어렵다', rom:'eoryeopda', meaning:'ser difícil'},
+      {hangul:'음식', rom:'eumsik', meaning:'comida'},
+      {hangul:'이거', rom:'igeo', meaning:'esto'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'이 음식 어때요?', rom:'i eumsik eottaeyo?', es:'¿Qué tal esta comida?'},
+      {sp:'B', hangul:'정말 맛있어요!', rom:'jeongmal masisseoyo!', es:'¡Está realmente rica!'},
+      {sp:'A', hangul:'이거 뭐예요?', rom:'igeo mwoyeyo?', es:'¿Qué es esto?'},
+      {sp:'B', hangul:'김치예요.', rom:'gimchiyeyo.', es:'Es kimchi.'},
+    ],
+    grammarIntro:'En coreano, los adjetivos funcionan como "verbos descriptivos" y se conjugan con las mismas reglas -아요/어요. Las palabras interrogativas básicas son: <b>뭐</b> (qué), <b>어디</b> (dónde), <b>언제</b> (cuándo), <b>누구</b> (quién), <b>왜</b> (por qué), <b>어떻게</b> (cómo).',
+    grammarRows: [
+      {p:'크다 → 커요', e:'집이 커요', es:'la casa es grande'},
+      {p:'작다 → 작아요', e:'가방이 작아요', es:'la bolsa es pequeña'},
+      {p:'맛있다 → 맛있어요', e:'음식이 맛있어요', es:'la comida está rica'},
+      {p:'어렵다 → 어려워요', e:'한국어가 어려워요', es:'el coreano es difícil'},
+    ],
+    exercises: [
+      {q:'작다 → forma presente', opts:['작아요','작어요','작다요','작이요'], correct:'작아요'},
+      {q:'맛있다 → forma presente', opts:['맛있아요','맛있어요','맛있다요','맛있이요'], correct:'맛있어요'},
+      {q:'"¿Dónde está el libro?" — elige la palabra interrogativa', opts:['어디','언제','누구','뭐'], correct:'어디'},
+      {q:'"¿Quién es?" — elige la palabra interrogativa', opts:['왜','어떻게','누구','뭐'], correct:'누구'},
+    ],
+  },
+];
+const M4_KEYS = LESSONS.map(l=>'m4-lesson-'+l.id);
+
+/* ---------- Module 5: Gramática intermedia (hacia B1) ---------- */
+const LESSONS5 = [
+  {
+    id:1, title:'Conectores básicos', subtitle:'그리고, 그런데, 그래서, 왜냐하면',
+    vocab: [
+      {hangul:'그리고', rom:'geurigo', meaning:'y, además'},
+      {hangul:'그런데', rom:'geureonde', meaning:'pero, sin embargo'},
+      {hangul:'그래서', rom:'geuraeseo', meaning:'por eso, así que'},
+      {hangul:'왜냐하면', rom:'waenyahamyeon', meaning:'porque (introduce una razón)'},
+      {hangul:'날씨', rom:'nalssi', meaning:'clima'},
+      {hangul:'바쁘다', rom:'bappeuda', meaning:'estar ocupado/a'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'오늘 날씨가 좋아요. 그런데 좀 추워요.', rom:'oneul nalssiga joayo. geureonde jom chuwoyo.', es:'Hoy el clima está bueno. Pero hace un poco de frío.'},
+      {sp:'B', hangul:'네, 그래서 저는 따뜻한 커피를 마셔요.', rom:'ne, geuraeseo jeoneun ttatteuthan keopireul masyeoyo.', es:'Sí, por eso tomo un café caliente.'},
+      {sp:'A', hangul:'저는 오늘 바빠요. 왜냐하면 시험이 있어요.', rom:'jeoneun oneul bappayo. waenyahamyeon siheomi isseoyo.', es:'Hoy estoy ocupado/a. Porque tengo un examen.'},
+      {sp:'B', hangul:'그리고 내일도 바빠요?', rom:'geurigo naeildo bappayo?', es:'¿Y mañana también estás ocupado/a?'},
+    ],
+    grammarIntro:'Estos cuatro conectores van al <b>inicio de una nueva oración</b> (no se pegan a ningún verbo), a diferencia de otras formas que verás más adelante en este módulo.',
+    grammarRows: [
+      {p:'그리고 = y, además', e:'그리고 저는 학생이에요', es:'y yo soy estudiante'},
+      {p:'그런데(근데) = pero', e:'근데 시간이 없어요', es:'pero no tengo tiempo'},
+      {p:'그래서 = por eso', e:'그래서 집에 가요', es:'por eso voy a casa'},
+      {p:'왜냐하면 = porque', e:'왜냐하면 바빠요', es:'porque estoy ocupado/a'},
+    ],
+    exercises: [
+      {q:'"Tengo hambre. ___ como algo." — elige el conector', opts:['그래서','그런데','그리고','왜냐하면'], correct:'그래서'},
+      {q:'"Me gusta el café. ___ no me gusta el té." — elige el conector', opts:['그리고','그런데','그래서','왜냐하면'], correct:'그런데'},
+      {q:'"Estoy cansado. ___ trabajé mucho." (introduce la razón)', opts:['그리고','그래서','왜냐하면','그런데'], correct:'왜냐하면'},
+      {q:'¿Cuál significa "y, además"?', opts:['그런데','그래서','그리고','왜냐하면'], correct:'그리고'},
+    ],
+  },
+  {
+    id:2, title:'-고 — Conectar acciones', subtitle:'Secuencias',
+    vocab: [
+      {hangul:'씻다', rom:'ssitda', meaning:'lavarse'},
+      {hangul:'입다', rom:'ipda', meaning:'vestirse, ponerse ropa'},
+      {hangul:'나가다', rom:'nagada', meaning:'salir'},
+      {hangul:'청소하다', rom:'cheongsohada', meaning:'limpiar'},
+      {hangul:'쉬다', rom:'swida', meaning:'descansar'},
+      {hangul:'숙제', rom:'sukje', meaning:'tarea'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'아침에 뭐 해요?', rom:'achime mwo haeyo?', es:'¿Qué haces en la mañana?'},
+      {sp:'B', hangul:'씻고 아침을 먹어요. 그리고 학교에 가요.', rom:'ssitgo achimeul meogeoyo. geurigo hakgyoe gayo.', es:'Me lavo y desayuno. Y voy a la escuela.'},
+      {sp:'A', hangul:'주말에는요?', rom:'jumaraeneunyo?', es:'¿Y el fin de semana?'},
+      {sp:'B', hangul:'청소하고 쉬어요.', rom:'cheongsohago swieoyo.', es:'Limpio y descanso.'},
+    ],
+    grammarIntro:'<b>-고</b> se pega directamente a la raíz del verbo (sin importar su vocal) para conectar dos o más acciones, como "y" entre verbos: "hago A y hago B".',
+    grammarRows: [
+      {p:'씻다 → 씻고', e:'씻고 옷을 입어요', es:'me lavo y me visto'},
+      {p:'먹다 → 먹고', e:'먹고 자요', es:'como y duermo'},
+      {p:'하다 → 하고', e:'청소하고 쉬어요', es:'limpio y descanso'},
+    ],
+    exercises: [
+      {q:'씻다 + 고 →', opts:['씻고','씻어고','씻다고','씻으고'], correct:'씻고'},
+      {q:'청소하다 + 고 →', opts:['청소하고','청소해고','청소고','청소하다고'], correct:'청소하고'},
+      {q:'"Como y duermo" →', opts:['먹고 자요','먹어서 자요','먹지만 자요','먹으면 자요'], correct:'먹고 자요'},
+      {q:'하다 + 고 →', opts:['해고','하고','하다고','했고'], correct:'하고'},
+    ],
+  },
+  {
+    id:3, title:'-아서/어서 — Causa y secuencia', subtitle:'Razones',
+    vocab: [
+      {hangul:'늦다', rom:'neutda', meaning:'llegar tarde'},
+      {hangul:'아프다', rom:'apeuda', meaning:'estar enfermo, doler'},
+      {hangul:'피곤하다', rom:'pigonhada', meaning:'estar cansado/a'},
+      {hangul:'배고프다', rom:'baegopeuda', meaning:'tener hambre'},
+      {hangul:'일찍', rom:'iljjik', meaning:'temprano'},
+      {hangul:'병원', rom:'byeongwon', meaning:'hospital, clínica'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'왜 늦었어요?', rom:'wae neujeosseoyo?', es:'¿Por qué llegaste tarde?'},
+      {sp:'B', hangul:'늦게 일어나서 늦었어요.', rom:'neutge ireonaseo neujeosseoyo.', es:'Me desperté tarde, así que llegué tarde.'},
+      {sp:'A', hangul:'오늘 피곤해 보여요.', rom:'oneul pigonhae boyeoyo.', es:'Te ves cansado/a hoy.'},
+      {sp:'B', hangul:'네, 어제 늦게 자서 피곤해요.', rom:'ne, eoje neutge jaseo pigonhaeyo.', es:'Sí, anoche dormí tarde, así que estoy cansado/a.'},
+    ],
+    grammarIntro:'<b>-아서/어서</b> sigue la misma regla vocálica que -아요/어요 (아/오→아서, el resto→어서; 하다→해서), pero conecta la CAUSA con su resultado dentro de la misma oración — a diferencia de 왜냐하면, que empieza una oración nueva.',
+    grammarRows: [
+      {p:'배고프다 → 배고파서', e:'배고파서 밥을 먹어요', es:'tengo hambre, así que como'},
+      {p:'아프다 → 아파서', e:'아파서 병원에 가요', es:'estoy enfermo, así que voy al hospital'},
+      {p:'피곤하다 → 피곤해서', e:'피곤해서 쉬어요', es:'estoy cansado, así que descanso'},
+      {p:'늦다 → 늦어서', e:'늦어서 뛰어요', es:'llego tarde, así que corro'},
+    ],
+    exercises: [
+      {q:'배고프다 → forma -아서/어서', opts:['배고파서','배고프고서','배고파고','배고프서'], correct:'배고파서'},
+      {q:'아프다 → forma -아서/어서', opts:['아프서','아파서','아프고서','아팠서'], correct:'아파서'},
+      {q:'피곤하다 → forma -아서/어서', opts:['피곤하서','피곤해서','피곤하고서','피곤해고'], correct:'피곤해서'},
+      {q:'"Como estoy enfermo, voy al hospital" →', opts:['아파서 병원에 가요','아프고 병원에 가요','아프면 병원에 가요','아프지만 병원에 가요'], correct:'아파서 병원에 가요'},
+    ],
+  },
+  {
+    id:4, title:'Futuro y deseo', subtitle:'-(으)ㄹ 거예요 y -고 싶다',
+    vocab: [
+      {hangul:'여행', rom:'yeohaeng', meaning:'viaje'},
+      {hangul:'다음 주', rom:'daeum ju', meaning:'la próxima semana'},
+      {hangul:'계획', rom:'gyehoek', meaning:'plan'},
+      {hangul:'배우다', rom:'baeuda', meaning:'aprender'},
+      {hangul:'만들다', rom:'mandeulda', meaning:'hacer, crear'},
+      {hangul:'기대되다', rom:'gidaedoeda', meaning:'estar emocionado/expectante'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'다음 주에 뭐 할 거예요?', rom:'daeum jue mwo hal geoyeyo?', es:'¿Qué vas a hacer la próxima semana?'},
+      {sp:'B', hangul:'여행 갈 거예요. 한국어를 배우고 싶어요.', rom:'yeohaeng gal geoyeyo. hangugeoreul baeugo sipeoyo.', es:'Voy a viajar. Quiero aprender coreano.'},
+      {sp:'A', hangul:'좋은 계획이네요!', rom:'joeun gyehoegineyo!', es:'¡Qué buen plan!'},
+      {sp:'B', hangul:'네, 정말 기대돼요.', rom:'ne, jeongmal gidaedwaeyo.', es:'Sí, estoy muy emocionado/a.'},
+    ],
+    grammarIntro:'<b>-(으)ㄹ 거예요</b> expresa futuro/intención: raíz + <b>ㄹ 거예요</b> si termina en vocal, + <b>을 거예요</b> si termina en consonante. <b>-고 싶다</b> expresa deseo ("querer hacer algo"): se pega a la raíz sin importar la terminación, y se conjuga como adjetivo (-고 싶어요).',
+    grammarRows: [
+      {p:'가다 (vocal) → 갈 거예요', e:'여행 갈 거예요', es:'voy a viajar'},
+      {p:'먹다 (consonante) → 먹을 거예요', e:'저녁을 먹을 거예요', es:'voy a cenar'},
+      {p:'배우다 + 고 싶다', e:'배우고 싶어요', es:'quiero aprender'},
+      {p:'가다 + 고 싶다', e:'가고 싶어요', es:'quiero ir'},
+    ],
+    exercises: [
+      {q:'가다 (termina en vocal) → futuro', opts:['갈 거예요','가을 거예요','가고 거예요','간 거예요'], correct:'갈 거예요'},
+      {q:'먹다 (termina en consonante) → futuro', opts:['먹ㄹ 거예요','먹을 거예요','먹거예요','먹고 거예요'], correct:'먹을 거예요'},
+      {q:'배우다 + deseo →', opts:['배우고 싶어요','배울 싶어요','배워서 싶어요','배우면 싶어요'], correct:'배우고 싶어요'},
+      {q:'"Quiero descansar" →', opts:['쉬고 싶어요','쉴 싶어요','쉬어서 싶어요','쉬면 싶어요'], correct:'쉬고 싶어요'},
+    ],
+  },
+  {
+    id:5, title:'Contraste y condición', subtitle:'-지만 y -(으)면',
+    vocab: [
+      {hangul:'쉽다', rom:'swipda', meaning:'ser fácil'},
+      {hangul:'열심히', rom:'yeolsimhi', meaning:'con esfuerzo, duro'},
+      {hangul:'노력하다', rom:'noryeokhada', meaning:'esforzarse'},
+      {hangul:'시험', rom:'siheom', meaning:'examen'},
+      {hangul:'합격하다', rom:'hapgyeokhada', meaning:'aprobar, pasar (un examen)'},
+      {hangul:'연습하다', rom:'yeonseuphada', meaning:'practicar'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'한국어가 어때요?', rom:'hangugeoga eottaeyo?', es:'¿Qué tal el coreano?'},
+      {sp:'B', hangul:'어렵지만 재미있어요.', rom:'eoryeopjiman jaemiisseoyo.', es:'Es difícil, pero divertido.'},
+      {sp:'A', hangul:'열심히 연습하면 잘할 거예요!', rom:'yeolsimhi yeonseuphamyeon jalhal geoyeyo!', es:'¡Si practicas duro, lo harás bien!'},
+      {sp:'B', hangul:'네, 매일 연습할 거예요.', rom:'ne, maeil yeonseuphal geoyeyo.', es:'Sí, practicaré todos los días.'},
+    ],
+    grammarIntro:'<b>-지만</b> se pega a la raíz del verbo/adjetivo para decir "pero" dentro de una misma oración (más neutro/formal que 그런데). <b>-(으)면</b> expresa condición ("si..."): raíz + <b>면</b> si termina en vocal, + <b>으면</b> si termina en consonante.',
+    grammarRows: [
+      {p:'어렵다 → 어렵지만', e:'어렵지만 재미있어요', es:'es difícil, pero divertido'},
+      {p:'가다 (vocal) → 가면', e:'학교에 가면...', es:'si voy a la escuela...'},
+      {p:'먹다 (consonante) → 먹으면', e:'밥을 먹으면...', es:'si como...'},
+      {p:'연습하다 → 연습하면', e:'연습하면 잘해요', es:'si practicas, lo haces bien'},
+    ],
+    exercises: [
+      {q:'어렵다 + 지만 →', opts:['어렵지만','어려워지만','어렵고지만','어려지만'], correct:'어렵지만'},
+      {q:'가다 (vocal) + 면 →', opts:['가면','가으면','갈면','간면'], correct:'가면'},
+      {q:'먹다 (consonante) + 면 →', opts:['먹면','먹으면','먹아면','먹고면'], correct:'먹으면'},
+      {q:'"Si practicas, aprobarás" →', opts:['연습하면 합격할 거예요','연습하지만 합격할 거예요','연습해서 합격할 거예요','연습하고 합격할 거예요'], correct:'연습하면 합격할 거예요'},
+    ],
+  },
+  {
+    id:6, title:'Estilo formal y honoríficos', subtitle:'습니다/ㅂ니다 y -(으)세요',
+    vocab: [
+      {hangul:'회사', rom:'hoesa', meaning:'empresa'},
+      {hangul:'회의', rom:'hoeui', meaning:'reunión'},
+      {hangul:'사장님', rom:'sajangnim', meaning:'jefe/a, director/a (honorífico)'},
+      {hangul:'드리다', rom:'deurida', meaning:'dar (honorífico de 주다)'},
+      {hangul:'계시다', rom:'gyesida', meaning:'estar (honorífico de 있다)'},
+      {hangul:'드시다', rom:'deusida', meaning:'comer/beber (honorífico)'},
+    ],
+    dialogue: [
+      {sp:'A', hangul:'사장님, 회의가 몇 시예요?', rom:'sajangnim, hoeuiga myeot siyeyo?', es:'Jefe/a, ¿a qué hora es la reunión?'},
+      {sp:'B', hangul:'3시에 시작합니다.', rom:'sesie sijakhamnida.', es:'Empieza a las 3.'},
+      {sp:'A', hangul:'사장님은 지금 회사에 계세요?', rom:'sajangnimeun jigeum hoesae gyeseyo?', es:'¿El/la jefe/a está en la empresa ahora?'},
+      {sp:'B', hangul:'네, 지금 계십니다.', rom:'ne, jigeum gyesimnida.', es:'Sí, está ahora.'},
+    ],
+    grammarIntro:'El estilo formal <b>습니다/ㅂ니다</b> se usa en ambientes muy formales (empresas, noticias, presentaciones): raíz + <b>습니다</b> si termina en consonante, + <b>ㅂ니다</b> si termina en vocal. Los honoríficos elevan el respeto hacia la persona de la que se habla: se agrega <b>-(으)시-</b> a la raíz (→ <b>-(으)세요</b> en presente educado), y algunos verbos tienen una forma honorífica especial: 있다→<b>계시다</b>, 먹다/마시다→<b>드시다</b>, 주다→<b>드리다</b>.',
+    grammarRows: [
+      {p:'가다 (vocal) → 갑니다', e:'학교에 갑니다', es:'voy a la escuela (formal)'},
+      {p:'먹다 (consonante) → 먹습니다', e:'점심을 먹습니다', es:'almuerzo (formal)'},
+      {p:'있다 → 계시다 (honorífico)', e:'사장님이 계세요', es:'el/la jefe/a está'},
+      {p:'먹다/마시다 → 드시다 (honorífico)', e:'많이 드세요', es:'coma mucho (educadamente)'},
+    ],
+    exercises: [
+      {q:'가다 (vocal) → estilo formal', opts:['갑니다','가습니다','간니다','가ㅂ니다'], correct:'갑니다'},
+      {q:'먹다 (consonante) → estilo formal', opts:['먹니다','먹습니다','먹ㅂ니다','먹입니다'], correct:'먹습니다'},
+      {q:'Forma honorífica de 있다 (estar)', opts:['계시다','드시다','드리다','있으세요'], correct:'계시다'},
+      {q:'Forma honorífica de 먹다/마시다 (comer/beber)', opts:['드리다','계시다','드시다','잡수다'], correct:'드시다'},
+    ],
+  },
+];
+const M5_KEYS = LESSONS5.map(l=>'m5-lesson-'+l.id);
+
 /* ===================== STATE / STORAGE ===================== */
 const STORE_KEY = 'kimchi_progress_v1';
 function loadProgress(){
@@ -324,6 +698,10 @@ function render(){
   if(route.screen==='m1') return renderM1();
   if(route.screen==='m2') return renderM2();
   if(route.screen==='m3') return renderM3();
+  if(route.screen==='m4') return renderM4();
+  if(route.screen==='lesson4') return renderLesson4();
+  if(route.screen==='m5') return renderM5();
+  if(route.screen==='lesson5') return renderLesson5();
   if(route.screen==='study') return renderStudy();
   if(route.screen==='batchim') return renderBatchim();
   if(route.screen==='vocabstudy') return renderVocabStudy();
@@ -336,6 +714,8 @@ function renderHome(){
   const pct1 = completionFor(ALL.map(x=>x.g));
   const pct2 = completionFor(M2_KEYS);
   const pct3 = completionFor(M3_KEYS);
+  const pct4 = completionFor(M4_KEYS);
+  const pct5 = completionFor(M5_KEYS);
   app.innerHTML = `
     <div class="hero">
       <div class="brand">
@@ -379,11 +759,22 @@ function renderHome(){
           <div class="bar"><div style="width:${pct3}%"></div></div>
         </div>
       </div>
-      <div class="mcard locked">
+      <div class="mcard" onclick="nav({screen:'m4'})">
         <div class="icon c1" style="background:var(--ink);">文</div>
         <div class="info">
           <h3>Módulo 4 — Gramática básica</h3>
-          <p>Partículas, verbos, adjetivos y tiempos (estilo V.I.V.A.)</p>
+          <p>6 lecciones V.I.V.A.: partículas, verbos, pasado, adjetivos</p>
+          <div class="prog">${pct4}% completado</div>
+          <div class="bar"><div style="width:${pct4}%"></div></div>
+        </div>
+      </div>
+      <div class="mcard" onclick="nav({screen:'m5'})">
+        <div class="icon c2">高</div>
+        <div class="info">
+          <h3>Módulo 5 — Gramática intermedia</h3>
+          <p>Conectores, honoríficos y estilo formal — hacia B1</p>
+          <div class="prog">${pct5}% completado</div>
+          <div class="bar"><div style="width:${pct5}%"></div></div>
         </div>
       </div>
     </div>
@@ -723,6 +1114,164 @@ function renderWordQuizResult(){
       <button class="btn-primary" style="padding:14px 28px; border-radius:12px; border:none; font-weight:700; margin-top:14px;" onclick="startWordQuiz()">Repetir</button>
     </div>
   `;
+}
+
+
+/* ---------- Module 4 screens (V.I.V.A. lessons) ---------- */
+const MOD_CONFIG = {
+  m4: {lessons:LESSONS, listScreen:'m4', selfScreen:'lesson4', prefix:'m4-lesson-', label:'6 lecciones — nivel A1-A2'},
+  m5: {lessons:LESSONS5, listScreen:'m5', selfScreen:'lesson5', prefix:'m5-lesson-', label:'6 lecciones — hacia B1'},
+};
+function renderModuleLessonList(mod){
+  const cfg = MOD_CONFIG[mod];
+  const wrap = document.createElement('div');
+  let html = `<div class="section-label">${cfg.label}</div><div class="modules" style="padding-top:8px;">`;
+  cfg.lessons.forEach(l=>{
+    const done = progress.studied[cfg.prefix+l.id];
+    html += `<div class="mcard" onclick="nav({screen:'${cfg.selfScreen}', id:${l.id}, tab:'vocab'})">
+      <div class="icon c1" style="background:${done?'var(--good)':'var(--ink)'};">${l.id}</div>
+      <div class="info">
+        <h3>${l.title}</h3>
+        <p>${l.subtitle}</p>
+        <div class="prog">${done?'✓ Completada':'Sin empezar'}</div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  wrap.innerHTML = html;
+  app.appendChild(wrap);
+}
+function renderM4(){ renderModuleLessonList('m4'); }
+function renderM5(){ renderModuleLessonList('m5'); }
+
+function renderLessonScreen(mod){
+  const cfg = MOD_CONFIG[mod];
+  const lesson = cfg.lessons.find(l=>l.id===route.id);
+  const sub = route.tab || 'vocab';
+  app.innerHTML = `
+    <header class="top">
+      <div class="back" onclick="nav({screen:'${cfg.listScreen}'})">‹</div>
+      <div><h1>${lesson.title}</h1><div class="sub">${lesson.subtitle}</div></div>
+    </header>
+    <div class="tabs">
+      <div class="tab ${sub==='vocab'?'active':''}" onclick="nav({screen:'${cfg.selfScreen}',id:${lesson.id},tab:'vocab'})">Vocabulario</div>
+      <div class="tab ${sub==='inter'?'active':''}" onclick="nav({screen:'${cfg.selfScreen}',id:${lesson.id},tab:'inter'})">Interacción</div>
+      <div class="tab ${sub==='vis'?'active':''}" onclick="nav({screen:'${cfg.selfScreen}',id:${lesson.id},tab:'vis'})">Visualización</div>
+      <div class="tab ${sub==='ap'||sub==='ap-run'?'active':''}" onclick="nav({screen:'${cfg.selfScreen}',id:${lesson.id},tab:'ap'})">Aplicación</div>
+    </div>
+  `;
+  if(sub==='vocab') renderLessonVocab(lesson);
+  else if(sub==='inter') renderLessonDialogue(lesson);
+  else if(sub==='vis') renderLessonGrammar(lesson);
+  else if(sub==='ap') renderLessonExerciseIntro(lesson, mod);
+  else if(sub==='ap-run') renderLessonExerciseRun(lesson);
+}
+function renderLesson4(){ renderLessonScreen('m4'); }
+function renderLesson5(){ renderLessonScreen('m5'); }
+
+function renderLessonVocab(lesson){
+  const wrap = document.createElement('div');
+  wrap.className = 'study-wrap';
+  wrap.innerHTML = lesson.vocab.map(v=>`
+    <div class="flash" style="padding:16px 18px; margin-bottom:10px; text-align:left; display:flex; align-items:center; gap:14px;">
+      <div class="kr" style="font-size:26px; font-weight:700; min-width:78px;">${v.hangul}</div>
+      <div style="flex:1;">
+        <div style="font-size:13px; color:var(--red); font-weight:700;">${v.rom}</div>
+        <div style="font-size:13px; color:var(--muted);">${v.meaning}</div>
+      </div>
+      <button class="audio-btn" style="width:38px; height:38px; font-size:16px; margin:0;" onclick="speak('${v.hangul}')">🔊</button>
+    </div>
+  `).join('');
+  app.appendChild(wrap);
+}
+
+function renderLessonDialogue(lesson){
+  const wrap = document.createElement('div');
+  wrap.className = 'study-wrap';
+  wrap.innerHTML = `<div class="flash" style="text-align:left;">` +
+    lesson.dialogue.map(d=>`
+      <div style="margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--line);">
+        <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:3px;">${d.sp==='A'?'🗣️ Persona A':'🗣️ Persona B'}</div>
+        <div class="kr" style="font-size:17px; font-weight:700;">${d.hangul} <button class="audio-btn" style="width:28px; height:28px; font-size:12px; margin:0 0 0 4px; vertical-align:middle;" onclick="speak('${d.hangul}')">🔊</button></div>
+        <div style="font-size:12px; color:var(--red); margin-top:2px;">${d.rom}</div>
+        <div style="font-size:13px; color:var(--muted); margin-top:2px;">${d.es}</div>
+      </div>
+    `).join('') + `</div>`;
+  app.appendChild(wrap);
+}
+
+function renderLessonGrammar(lesson){
+  const wrap = document.createElement('div');
+  wrap.className = 'study-wrap';
+  wrap.innerHTML = `
+    <div class="flash" style="text-align:left;">
+      <p style="margin:0 0 14px; font-size:14px; line-height:1.55;">${lesson.grammarIntro}</p>
+      <div style="border-top:1px solid var(--line); padding-top:10px;">
+        ${lesson.grammarRows.map(r=>`
+          <div style="display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:13px;">
+            <div style="color:var(--muted); flex:1;">${r.p}</div>
+            <div style="text-align:right;"><span class="kr" style="font-weight:700;">${r.e}</span><br><span style="color:var(--muted); font-size:11.5px;">${r.es}</span></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  app.appendChild(wrap);
+}
+
+let lessonExState = {lessonId:null, idx:0, correct:0, mod:'m4'};
+function renderLessonExerciseIntro(lesson, mod){
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="empty-hint">
+    <p style="font-size:15px; color:var(--ink); font-weight:700;">Aplicación</p>
+    <p>${lesson.exercises.length} ejercicios de opción múltiple para practicar lo visto en esta lección.</p>
+    <button class="btn-primary" style="padding:14px 28px; border-radius:12px; border:none; font-weight:700; margin-top:10px;" onclick="startLessonExercises(${lesson.id},'${mod}')">Comenzar</button>
+  </div>`;
+  app.appendChild(wrap);
+}
+function startLessonExercises(id, mod){
+  lessonExState = {lessonId:id, idx:0, correct:0, mod};
+  nav({screen:MOD_CONFIG[mod].selfScreen, id, tab:'ap-run'});
+}
+function renderLessonExerciseRun(lesson){
+  if(lessonExState.idx >= lesson.exercises.length) return renderLessonExerciseResult(lesson);
+  const ex = lesson.exercises[lessonExState.idx];
+  const opts = [...ex.opts].sort(()=>Math.random()-0.5);
+  const wrap = document.createElement('div');
+  wrap.className = 'quiz-wrap';
+  wrap.innerHTML = `
+    <div class="quiz-progress">${lesson.exercises.map((_,i)=>`<div class="${i<lessonExState.idx?'done':''}"></div>`).join('')}</div>
+    <p style="text-align:center; font-size:15px; margin:20px 0; line-height:1.5;">${ex.q}</p>
+    <div class="quiz-options" style="grid-template-columns:1fr;">
+      ${opts.map(o=>`<div class="qopt kr" onclick="answerLessonExercise('${o.replace(/'/g,"\\'")}','${ex.correct.replace(/'/g,"\\'")}',this)">${o}</div>`).join('')}
+    </div>
+  `;
+  app.appendChild(wrap);
+}
+function answerLessonExercise(chosen, correct, el){
+  const opts = document.querySelectorAll('.qopt');
+  opts.forEach(o=>o.onclick=null);
+  if(chosen===correct){ el.classList.add('correct'); lessonExState.correct++; }
+  else{
+    el.classList.add('wrong');
+    opts.forEach(o=>{ if(o.textContent===correct) o.classList.add('correct'); });
+  }
+  setTimeout(()=>{ lessonExState.idx++; render(); }, 800);
+}
+function renderLessonExerciseResult(lesson){
+  const mod = lessonExState.mod;
+  const cfg = MOD_CONFIG[mod];
+  progress.studied[cfg.prefix+lesson.id] = true; saveProgress(progress);
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="quiz-result">
+      <div class="score">${lessonExState.correct}/${lesson.exercises.length}</div>
+      <p style="color:var(--muted);">¡Lección completada!</p>
+      <button class="btn-primary" style="padding:14px 28px; border-radius:12px; border:none; font-weight:700; margin-top:14px;" onclick="startLessonExercises(${lesson.id},'${mod}')">Repetir ejercicios</button>
+      <button class="btn-secondary" style="padding:14px 28px; border-radius:12px; font-weight:700; margin-top:10px; display:block; width:100%;" onclick="nav({screen:'${cfg.listScreen}'})">Volver a lecciones</button>
+    </div>
+  `;
+  app.appendChild(wrap);
 }
 
 
